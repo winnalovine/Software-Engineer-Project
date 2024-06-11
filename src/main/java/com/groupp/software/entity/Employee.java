@@ -18,10 +18,13 @@ public class Employee implements Serializable {
 
     private String password;
 
+    private Long phoneNumber;
     private String departmentLevel;
 
     private Integer departmentType;
 
     private Integer roleType;
+
+
 
 }
