@@ -24,15 +24,16 @@ public class GlobalExceptionHandler {
      * 异常处理方法
      * */
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public R<String> exceptionHandler(SQLIntegrityConstraintViolationException ex) {
-        log.error(ex.getMessage());
+    public R exceptionHandler(SQLIntegrityConstraintViolationException e) {
+        log.error(e.getMessage());
 
-        if (ex.getMessage().contains("Duplicate entry")) {
-            String[] split = ex.getMessage().split(" ");
+        if (e.getMessage().contains("Duplicate entry")) {
+            String[] split = e.getMessage().split(" ");
             String msg = split[2] + "已存在";
             return R.error(msg);
         }
 
         return R.error("未知错误");
     }
+
 }

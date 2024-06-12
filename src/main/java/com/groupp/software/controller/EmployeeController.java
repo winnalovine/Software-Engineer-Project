@@ -1,35 +1,32 @@
 package com.groupp.software.controller;
 
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.groupp.software.common.R;
 import com.groupp.software.entity.Employee;
 import com.groupp.software.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 
 
 //todo 可能要修改mapper的资源位置
 @RestController
+@CrossOrigin
 @RequestMapping("/employee")
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
 
-
     //todo 可能要修改映射位置
     @PostMapping("/login")
-    public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
+    public R login(HttpServletRequest request, @RequestBody Map<String, Object> payload){
         /*
         1.获取职员输入的职工号employeeId和password
         2.按职工号employee在数据库找对应的职工信息
@@ -37,58 +34,88 @@ public class EmployeeController {
         4.找到该职工，但是密码输入错误
         5.找到职工且密码正确，把职工号存在HttpSession中名为"employee"的属性中
         */
+        System.out.println("Received payload: " + payload);
+        // 手动解析数据
+        String eidStr = (String) payload.get("Eid");
+        Long employeeId = null;
+        try {
+            employeeId = Long.valueOf(eidStr);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid Eid format: " + eidStr);
+        }
+
+        String password = (String) payload.get("passData");
+
 //        1.获取职员输入的职工号employeeId和password
-        Long employeeId = employee.getEmployeeId();
-        String password = employee.getPassword();
+
+        // 在控制台打印
+        System.out.println("职工号: " + employeeId);
+        System.out.println("密码: " + password);
 
 //        2.按职工号employee在数据库找对应的职工信息
-        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Employee::getEmployeeId, employeeId);
+        LambdaQueryWrapper<Employee> queryWrapper= new LambdaQueryWrapper<>();
+        queryWrapper.eq(Employee::getEmployeeId,employeeId);
         Employee employee_ = employeeService.getOne(queryWrapper);
 
-
 //        3.找不到该职工
-        if (employee_ == null) {
+        if(employee_ == null){
             return R.error("该职工不存在");
         }
         //        4.找到该职工，但是密码输入错误
-        if (!employee_.getPassword().equals(password)) {
-            return R.error("密码错误");
+        if(!employee_.getPassword().equals(password)){
+            return  R.error("密码错误");
         }
-        //        5.找到职工且密码正确，把职工号存在HttpSession中名为"employee"的属性中
-        request.getSession().setAttribute("employee", employeeId);
-        return R.success(employee_);
 
+        //5.找到职工且密码正确，把职工号存在HttpSession中名为"employee"的属性中
+        request.getSession().setAttribute("employee",employeeId);
+        // 处理数据并准备返回的结果
+        Map<String, Object> result = new HashMap<>();
+        result.put("Eid", employeeId);
+        result.put("Ename", employee_.getName());
+        result.put("passData", password);
+        result.put("phone", employee_.getPhoneNumber());
+        result.put("Dlevel", employee_.getDepartmentLevel());
+        result.put("Dtype",employee_.getDepartmentType());
+        result.put("Etype", employee_.getRoleType());
+        System.out.println("Received result: " + (result));
+        return R.success(result);
     }
 
     //员工注册
     @PostMapping("/register")
-    public R<String> register(HttpServletRequest request, @RequestBody Employee employee) {
-        log.info("新增员工，员工信息：{}",employee.toString());
+    public R register(HttpServletRequest request, @RequestBody Map<String, Object> payload) {
+        log.info("新增员工，员工信息：{}",payload.toString());
 
-        employeeService.save(employee);
-
-        return R.success("注册成功");
-        /*//获取注册信息
-        Long employeeId = employee.getEmployeeId();
-        //按职工号在数据库查找信息
-        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Employee::getEmployeeId, employeeId);
-        Employee employee_ = employeeService.getOne(queryWrapper);
-
-        //没有找到，则可以进行注册
-        if (employee_ == null) {
-            //将注册的员工信息保存到数据库中
-            employeeService.save(employee);
-            //       注册成功，把职工号存在HttpSession中名为"employee"的属性中
-            request.getSession().setAttribute("employee", employeeId);
-            return R.success(employee);
+        //新建一个employee用来存储注册信息，并更新到数据库
+        String eidStr = (String) payload.get("Eid");
+        Employee employee=new Employee();
+        //手动解析数据
+        Long employeeId=null;
+        try {
+            employeeId = Long.valueOf(eidStr);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid Eid format: " + eidStr);
         }
-
-        //找到相同的职工号，则注册失败
-        else {
-            return R.error("该职工号信息已经存在，注册失败");
-        }*/
+        employee.setEmployeeId(employeeId);
+        employee.setPassword((String) payload.get("passData"));
+        employee.setName((String) payload.get("Ename"));
+        employee.setPhoneNumber((Long) payload.get("phone"));
+        employee.setDepartmentType((Integer) payload.get("Dtype"));
+        employee.setDepartmentLevel((String) payload.get("Dlevel"));;
+        employee.setRoleType((Integer) payload.get("Etype"));
+        //实现注册
+        employeeService.save(employee);
+        //处理返回的数据
+        Map<String, Object> result = new HashMap<>();
+        result.put("Eid", employee.getEmployeeId());
+        result.put("Ename", employee.getName());
+        result.put("passData", employee.getPassword());
+        result.put("phone", employee.getPhoneNumber());
+        result.put("Dlevel", employee.getDepartmentLevel());
+        result.put("Dtype",employee.getDepartmentType());
+        result.put("Etype", employee.getRoleType());
+        System.out.println("Received result: " + (result));
+        return R.success(result);
 
 
     }
