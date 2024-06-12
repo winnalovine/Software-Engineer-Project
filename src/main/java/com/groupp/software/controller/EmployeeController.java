@@ -101,7 +101,7 @@ public class EmployeeController {
         employee.setName((String) payload.get("Ename"));
         employee.setPhoneNumber((Long) payload.get("phone"));
         employee.setDepartmentType((Integer) payload.get("Dtype"));
-        employee.setDepartmentLevel((String) payload.get("Dlevel"));;
+        employee.setDepartmentLevel((String) payload.get("Dlevel"));
         employee.setRoleType((Integer) payload.get("Etype"));
         //实现注册
         employeeService.save(employee);
