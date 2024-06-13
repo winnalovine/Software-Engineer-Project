@@ -28,7 +28,7 @@ public class MobileSwitchFaultOrdersController {
     private static final Map<String, String> reverseCityMap = new HashMap<>();
 
     static {
-        cityMap.put("0", "广州省");
+        cityMap.put("0", "广东省");
         cityMap.put("1", "广州市");
         cityMap.put("2", "深圳市");
         cityMap.put("3", "佛山市");
@@ -52,7 +52,7 @@ public class MobileSwitchFaultOrdersController {
         cityMap.put("21", "湛江市");
 
         // 初始化反向映射
-        reverseCityMap.put("广州省", "0");
+        reverseCityMap.put("广东省", "0");
         reverseCityMap.put("广州市", "1");
         reverseCityMap.put("深圳市", "2");
         reverseCityMap.put("佛山市", "3");
