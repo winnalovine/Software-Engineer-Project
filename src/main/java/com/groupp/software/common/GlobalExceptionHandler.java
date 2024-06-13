@@ -13,7 +13,8 @@ import java.sql.SQLIntegrityConstraintViolationException;
  * 全局异常处理
  */
 
-//to do 后面还有其他的异常都可以集中处理
+//todo 后面还有其他的异常都可以集中处理
+// 感觉后面不知道怎么写，把这个加到原来的位置吧。。。然后删掉这个类
 
 @ControllerAdvice(annotations = {RestController.class, Controller.class})
 @ResponseBody
