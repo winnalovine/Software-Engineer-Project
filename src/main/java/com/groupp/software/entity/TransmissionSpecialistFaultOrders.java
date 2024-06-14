@@ -15,7 +15,7 @@ public class TransmissionSpecialistFaultOrders {
     private Date submitDate;
     private Date reviewDate;
     private Date completionDate;
-    private Date fault_occurrenceDate;
+    private Date faultOccurrenceDate;
     private String processingUnit;
     private Long creatorEmployeeId;
     private Long handlerEmployeeId;
