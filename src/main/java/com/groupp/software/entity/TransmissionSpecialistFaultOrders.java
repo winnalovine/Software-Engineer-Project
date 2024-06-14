@@ -1,8 +1,11 @@
 package com.groupp.software.entity;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 import java.util.Date;
 
+@Data
 public class TransmissionSpecialistFaultOrders {
     //todo 可能要修改值
     private static final long serialVersionUID = 4L;
