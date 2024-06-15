@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.groupp.software.mapper.MobileSwitchFaultOrdersMapper">
+<!--    查询移动表单的工单编号和提交时间，可能要修改函数名称-->
+    <select id="findMobileSwitchFaultOrders" resultType="com.groupp.software.entity.MobileSwitchFaultOrders">
+            SELECT  order_id,submit_date FROM mobile_switch_fault_orders
+    </select>
+</mapper>

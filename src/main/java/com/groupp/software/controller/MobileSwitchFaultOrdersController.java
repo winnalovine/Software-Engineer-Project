@@ -1,8 +1,10 @@
 package com.groupp.software.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.groupp.software.common.R;
 import com.groupp.software.entity.MobileSwitchFaultOrders;
 import com.groupp.software.service.MobileSwitchFaultOrdersService;
+import com.groupp.software.service.impl.MobileSwitchFaultOrdersServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,9 @@ import java.util.Map;
 public class MobileSwitchFaultOrdersController {
     @Autowired
     private MobileSwitchFaultOrdersService mobileSwithFaultOrdersService;
+
+    @Autowired
+    private MobileSwitchFaultOrdersServiceImpl mobileSwithFaultOrdersServiceImpl;
 
     // 定义正向映射
     private static final Map<String, String> cityMap = new HashMap<>();
@@ -164,6 +169,15 @@ public class MobileSwitchFaultOrdersController {
         result.put("switch_id", mobileSwitchFaultOrders.getSwitchId());
         result.put("fault_description1", mobileSwitchFaultOrders.getFaultDescription());
 
+        return R.success(result);
+    }
+
+    @PostMapping("/processing")
+    public R processing(HttpServletRequest request,@RequestBody Map<String,Object>payload) throws ParseException{
+
+        int page=1;
+        int pagesize=5;
+        PageInfo<MobileSwitchFaultOrders>  result=mobileSwithFaultOrdersServiceImpl.findMobileSwitchFaultOrders(page,pagesize);
         return R.success(result);
     }
 }
