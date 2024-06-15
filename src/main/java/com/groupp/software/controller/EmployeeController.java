@@ -100,12 +100,10 @@ public class EmployeeController {
 
 
         employee.setEmployeeId(employeeId);
-        employee.setPassword((String) payload.get("passData"));
-        employee.setName((String) payload.get("Ename"));
-        employee.setPhoneNumber((Long) payload.get("phone"));
         employee.setDepartmentType((Integer) payload.get("Dtype"));
         employee.setDepartmentLevel((String) payload.get("Dlevel"));
         employee.setRoleType((Integer) payload.get("Etype"));
+        log.info("注册的信息：{}",employee.toString());
         //实现注册
         employeeService.save(employee);
         //处理返回的数据
