@@ -7,4 +7,9 @@
     <select id="findMobileSwitchFaultOrders" resultType="com.groupp.software.entity.MobileSwitchFaultOrders">
             SELECT  order_id,submit_date FROM mobile_switch_fault_orders
     </select>
+    <select id="findByparams" resultType="com.groupp.software.entity.MobileSwitchFaultOrders">
+            SELECT  * FROM mobile_switch_fault_orders where order_id =#{orderId}
+
+
+    </select>
 </mapper>

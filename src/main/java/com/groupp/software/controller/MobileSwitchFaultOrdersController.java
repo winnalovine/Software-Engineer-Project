@@ -180,4 +180,17 @@ public class MobileSwitchFaultOrdersController {
         PageInfo<MobileSwitchFaultOrders>  result=mobileSwithFaultOrdersServiceImpl.findMobileSwitchFaultOrders(page,pagesize);
         return R.success(result);
     }
+    @PostMapping("/processingDetails")
+    public R processingDetails(HttpServletRequest request,@RequestBody Map<String,Object> payload)throws ParseException{
+        log.info("开始根据id查询。。。");
+        log.info("orderId:{}", payload);
+        String orderId = (String) payload.get("orderId");
+        log.info("orderId:{}",(String) payload.get("orderId"));
+//        int orderId=Integer.parseInt(orderId1);
+        Map<String,Object> result=new HashMap<>();
+        result=mobileSwithFaultOrdersServiceImpl.findByparams(orderId);
+        log.info("result:{}",result);
+        return R.success(result);
+
+    }
 }

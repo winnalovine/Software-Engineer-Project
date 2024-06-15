@@ -19,10 +19,11 @@ public class MobileSwitchFaultOrders implements Serializable {
     private Date faultOccurrenceDate;
     private String processingUnit;
     private Long creatorEmployeeId;
-    private Long handleEmployeeId;
+    private Long handlerEmployeeId;
     private Integer faultType;
     private Integer faultLevel;
     private String switchId;
     private String faultDescription;
     private String reviewFeedback;
+
 }
