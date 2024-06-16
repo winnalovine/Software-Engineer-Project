@@ -182,11 +182,11 @@ public class MobileSwitchFaultOrdersController {
         HttpSession session = request.getSession();
         Long employeeId =(Long) session.getAttribute("employee");
         log.info("职工号employeeId:{}",employeeId );
-
+        String pageshow=(String) payload.get("pageshow");
         int page=Integer.parseInt(Spage);
         int pagesize=Integer.parseInt(Spagesize);
 
-        PageInfo<MobileSwitchFaultOrders>  result=mobileSwithFaultOrdersServiceImpl.findMobileSwitchFaultOrders(page,pagesize,employeeId);
+        PageInfo<MobileSwitchFaultOrders>  result=mobileSwithFaultOrdersServiceImpl.findMobileSwitchFaultOrders(page,pagesize,employeeId,pageshow);
         return R.success(result);
     }
     @PostMapping("/processingDetails")
@@ -195,6 +195,7 @@ public class MobileSwitchFaultOrdersController {
         log.info("开始根据id查询。。。");
         log.info("orderId:{}", payload);
         String orderId = (String) payload.get("orderId");
+        String pageshow=(String) payload.get("pageshow");
         log.info("orderId:{}",(String) payload.get("orderId"));
 //        int orderId=Integer.parseInt(orderId1);
         Map<String,Object> result=new HashMap<>();
