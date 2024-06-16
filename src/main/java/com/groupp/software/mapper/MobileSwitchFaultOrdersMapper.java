@@ -11,8 +11,9 @@ import java.util.Map;
 @Mapper
 public interface MobileSwitchFaultOrdersMapper extends BaseMapper<MobileSwitchFaultOrders>{
 
-    //根据职工号
+    //根据职工号和工单状态查所有满足条件的数据--分页（todo 赶紧这两个好像可以合到一起）
     List<MobileSwitchFaultOrders> findMobileSwitchFaultOrders(Map<String,Object>params);
-    //根据工单编号
+    //根据工单编号查数据
     MobileSwitchFaultOrders findByparams(Map<String,Object>params);
+    MobileSwitchFaultOrders updateByparams(Map<String,Object>params);
 }

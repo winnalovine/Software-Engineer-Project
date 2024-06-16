@@ -9,11 +9,22 @@
         <if test='pageshow=="0"' >
             and (order_status=1 or order_status=3 or order_status=5 or order_status=6)
         </if>
+        <if test='pageshow=="1"' >
+            and (order_status=0 )
+        </if>
+        <if test='pageshow=="2"' >
+            and (order_status=4 )
+        </if>
+        <if test='pageshow=="3"' >
+            and (order_status=2 )
+        </if>
 
     </select>
     <select id="findByparams" resultType="com.groupp.software.entity.MobileSwitchFaultOrders">
             SELECT  * FROM mobile_switch_fault_orders where order_id =#{orderId}
-
-
     </select>
+<!--    <update id="updateByparams" resultType="com.groupp.software.entity.MobileSwitchFaultOrders">-->
+
+<!--    </update>-->
+
 </mapper>
