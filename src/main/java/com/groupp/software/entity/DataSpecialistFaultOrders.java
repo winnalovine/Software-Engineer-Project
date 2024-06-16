@@ -13,7 +13,7 @@ public class DataSpecialistFaultOrders {
     private static final long serialVersionUID = 2L;
 
     //通过雪花自增算法来新增orderId
-    @TableId(value="order_id",type= IdType.ASSIGN_ID)
+    //@TableId(value="order_id",type= IdType.ASSIGN_ID)
     private Long orderId;//工单编号
 
     private Integer orderStatus;//工单编号

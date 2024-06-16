@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DataSpecialistFaultOrdersServiceImpl extends ServiceImpl<DataSpecialistFaultOrdersMapper, DataSpecialistFaultOrders> implements DataSpecialistFaultOrdersService {
 
-    //创建DataSpecialistFaultOrders实例化对象，并保证雪花算法生成的order_id的唯一性
+   /* //创建DataSpecialistFaultOrders实例化对象，并保证雪花算法生成的order_id的唯一性
     @Override
     public DataSpecialistFaultOrders createDataSpecialistFaultOrders() {
         DataSpecialistFaultOrders dataSpecialistFaultOrders = new DataSpecialistFaultOrders();
@@ -34,6 +34,6 @@ public class DataSpecialistFaultOrdersServiceImpl extends ServiceImpl<DataSpecia
         LambdaQueryWrapper<DataSpecialistFaultOrders> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(DataSpecialistFaultOrders::getOrderId, id);
         return count(queryWrapper) > 0;
-    }
+    }*/
 
 }

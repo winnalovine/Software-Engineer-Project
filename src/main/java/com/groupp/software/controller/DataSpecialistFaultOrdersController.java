@@ -88,8 +88,10 @@ public class DataSpecialistFaultOrdersController {
 
         //通过这种方式创建的dataSpecialistFaultOrders对象的orderId不会存在与数据库现有的数据重复的情况
         //实现了唯一性。。
-        DataSpecialistFaultOrders dataSpecialistFaultOrders = dataSpecialistFaultOrdersService.createDataSpecialistFaultOrders();
-        log.info("order_id:{}", dataSpecialistFaultOrders.getOrderId());
+        //DataSpecialistFaultOrders dataSpecialistFaultOrders = dataSpecialistFaultOrdersService.createDataSpecialistFaultOrders();
+
+        DataSpecialistFaultOrders dataSpecialistFaultOrders = new DataSpecialistFaultOrders();
+        //log.info("order_id:{}", dataSpecialistFaultOrders.getOrderId());
 
 
         //获取信息
@@ -155,9 +157,13 @@ public class DataSpecialistFaultOrdersController {
         //存入数据库
         dataSpecialistFaultOrdersService.save(dataSpecialistFaultOrders);
 
+        //获取order_id
+        Long id = dataSpecialistFaultOrders.getOrderId();
+        log.info("id:{}",id);
+
         //返回数据
         Map<String, Object> result = new HashMap<>();
-        result.put("order_id2", dataSpecialistFaultOrders.getOrderId());
+        //result.put("order_id2", dataSpecialistFaultOrders.getOrderId());
         result.put("order_status2", dataSpecialistFaultOrders.getOrderStatus());
         result.put("submit_date2", dataSpecialistFaultOrders.getSubmitDate());
         result.put("fault_occurrence_date2", dataSpecialistFaultOrders.getFaultOccurrenceDate());
