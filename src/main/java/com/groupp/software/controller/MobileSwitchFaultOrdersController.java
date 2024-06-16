@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -174,14 +175,23 @@ public class MobileSwitchFaultOrdersController {
 
     @PostMapping("/processing")
     public R processing(HttpServletRequest request,@RequestBody Map<String,Object>payload) throws ParseException{
+        log.info("收到的数据：{}", payload.toString());
+        String Spage=(String) payload.get("currentPage");
+        String Spagesize=(String)payload.get("pageSize");
+        log.info("开始获得session中的职工号employeeId。。");
+        HttpSession session = request.getSession();
+        Long employeeId =(Long) session.getAttribute("employee");
+        log.info("职工号employeeId:{}",employeeId );
 
-        int page=1;
-        int pagesize=5;
-        PageInfo<MobileSwitchFaultOrders>  result=mobileSwithFaultOrdersServiceImpl.findMobileSwitchFaultOrders(page,pagesize);
+        int page=Integer.parseInt(Spage);
+        int pagesize=Integer.parseInt(Spagesize);
+
+        PageInfo<MobileSwitchFaultOrders>  result=mobileSwithFaultOrdersServiceImpl.findMobileSwitchFaultOrders(page,pagesize,employeeId);
         return R.success(result);
     }
     @PostMapping("/processingDetails")
     public R processingDetails(HttpServletRequest request,@RequestBody Map<String,Object> payload)throws ParseException{
+
         log.info("开始根据id查询。。。");
         log.info("orderId:{}", payload);
         String orderId = (String) payload.get("orderId");

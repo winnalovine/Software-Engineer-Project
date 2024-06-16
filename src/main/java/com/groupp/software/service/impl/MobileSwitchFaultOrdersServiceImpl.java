@@ -17,9 +17,12 @@ import java.util.Map;
 @Service
 public class MobileSwitchFaultOrdersServiceImpl extends ServiceImpl<MobileSwitchFaultOrdersMapper, MobileSwitchFaultOrders> implements MobileSwitchFaultOrdersService {
 
-    public PageInfo<MobileSwitchFaultOrders> findMobileSwitchFaultOrders(int page,int size){
+    public PageInfo<MobileSwitchFaultOrders> findMobileSwitchFaultOrders(int page,int size, Long employeeId){
         PageHelper.startPage(page,size);
-        List<MobileSwitchFaultOrders> mobileSwitchFaultOrdersList=baseMapper.findMobileSwitchFaultOrders();
+        Map<String ,Object> params= new HashMap<>();
+        params.put("employeeId",employeeId);
+        log.info("employeeId:{}",employeeId);
+        List<MobileSwitchFaultOrders> mobileSwitchFaultOrdersList=baseMapper.findMobileSwitchFaultOrders(params);
         return new PageInfo<>(mobileSwitchFaultOrdersList);
     }
 

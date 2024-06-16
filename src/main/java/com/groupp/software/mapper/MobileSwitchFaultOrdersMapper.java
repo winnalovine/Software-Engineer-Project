@@ -11,6 +11,8 @@ import java.util.Map;
 @Mapper
 public interface MobileSwitchFaultOrdersMapper extends BaseMapper<MobileSwitchFaultOrders>{
 
-    List<MobileSwitchFaultOrders> findMobileSwitchFaultOrders();
+    //根据职工号
+    List<MobileSwitchFaultOrders> findMobileSwitchFaultOrders(Map<String,Object>params);
+    //根据工单编号
     MobileSwitchFaultOrders findByparams(Map<String,Object>params);
 }
