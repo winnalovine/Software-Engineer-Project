@@ -1,8 +1,10 @@
 package com.groupp.software.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.groupp.software.common.R;
 import com.groupp.software.entity.MobileSwitchFaultOrders;
 import com.groupp.software.service.MobileSwitchFaultOrdersService;
+import com.groupp.software.service.impl.MobileSwitchFaultOrdersServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,10 @@ import java.util.Map;
 @RequestMapping("/mobileswitchfaultOrders")
 public class MobileSwitchFaultOrdersController {
     @Autowired
-    private MobileSwitchFaultOrdersService mobileSwitchFaultOrdersService;
+    private MobileSwitchFaultOrdersService mobileSwithFaultOrdersService;
+
+    @Autowired
+    private MobileSwitchFaultOrdersServiceImpl mobileSwithFaultOrdersServiceImpl;
 
     // 定义正向映射
     private static final Map<String, String> cityMap = new HashMap<>();
@@ -28,7 +33,7 @@ public class MobileSwitchFaultOrdersController {
     private static final Map<String, String> reverseCityMap = new HashMap<>();
 
     static {
-        cityMap.put("0", "广东省");
+        cityMap.put("0", "广州省");
         cityMap.put("1", "广州市");
         cityMap.put("2", "深圳市");
         cityMap.put("3", "佛山市");
@@ -52,7 +57,7 @@ public class MobileSwitchFaultOrdersController {
         cityMap.put("21", "湛江市");
 
         // 初始化反向映射
-        reverseCityMap.put("广东省", "0");
+        reverseCityMap.put("广州省", "0");
         reverseCityMap.put("广州市", "1");
         reverseCityMap.put("深圳市", "2");
         reverseCityMap.put("佛山市", "3");
@@ -75,128 +80,117 @@ public class MobileSwitchFaultOrdersController {
         reverseCityMap.put("河源市", "20");
         reverseCityMap.put("湛江市", "21");
     }
-
     @PostMapping("/draftsubmit")
-    public R draftsubmit(HttpServletRequest request, @RequestBody Map<String, Object> payload) {
+    public R draftsubmit(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
         log.info("草稿箱表单信息：{}", payload.toString());
 
         MobileSwitchFaultOrders mobileSwitchFaultOrders = new MobileSwitchFaultOrders();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        try {
-            // 确保 order_status1 是 String 类型
-            Object orderStatusObj = payload.get("order_status1");
-            log.info("Order Status Object: {}", orderStatusObj);
-            if (orderStatusObj instanceof Integer) {
-                mobileSwitchFaultOrders.setOrderStatus((Integer) orderStatusObj);
-                log.info("Set Order Status as Integer: {}", orderStatusObj);
-            } else if (orderStatusObj instanceof String) {
-                mobileSwitchFaultOrders.setOrderStatus(Integer.parseInt((String) orderStatusObj));
-                log.info("Set Order Status as String: {}", orderStatusObj);
-            }
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                Object submitDateObj = payload.get("submit_date1");
-                log.info("Submit Date Object: {}", submitDateObj);
-                if (submitDateObj instanceof String) {
-                    Date date1 = dateFormat.parse((String) submitDateObj);
-                    java.sql.Date sql_date1 = new java.sql.Date(date1.getTime());
-                    mobileSwitchFaultOrders.setSubmitDate(sql_date1);
-                    log.info("Set Submit Date: {}", sql_date1);
-                }
-            } catch (ParseException e) {
-                log.error("日期转换异常：", e);
-            }
-
-            try {
-                Object faultOccurrenceDateObj = payload.get("fault_occurrence_date1");
-                log.info("Fault Occurrence Date Object: {}", faultOccurrenceDateObj);
-                if (faultOccurrenceDateObj instanceof String) {
-                    Date date2 = dateFormat.parse((String) faultOccurrenceDateObj);
-                    java.sql.Date sql_date2 = new java.sql.Date(date2.getTime());
-                    mobileSwitchFaultOrders.setFaultOccurrenceDate(sql_date2);
-                    log.info("Set Fault Occurrence Date: {}", sql_date2);
-                }
-            } catch (ParseException e) {
-                log.error("日期转换异常：", e);
-            }
-
-            // 根据前端传来的值设置城市名称
-            Object cityValueObj = payload.get("processing_unit1");
-            log.info("City Value Object: {}", cityValueObj);
-            String cityName = null;
-            if (cityValueObj instanceof Integer) {
-                cityName = cityMap.get(cityValueObj.toString());
-            } else if (cityValueObj instanceof String) {
-                cityName = cityMap.get((String) cityValueObj);
-            }
-            log.info("Set City Name: {}", cityName);
-            mobileSwitchFaultOrders.setProcessingUnit(cityName);
-
-            Object creatorEmployeeIdObj = payload.get("creator_employee_id1");
-            log.info("Creator Employee ID Object: {}", creatorEmployeeIdObj);
-            if (creatorEmployeeIdObj instanceof Integer) {
-                mobileSwitchFaultOrders.setCreatorEmployeeId(((Integer) creatorEmployeeIdObj).longValue());
-                log.info("Set Creator Employee ID as Integer: {}", creatorEmployeeIdObj);
-            } else if (creatorEmployeeIdObj instanceof String) {
-                mobileSwitchFaultOrders.setCreatorEmployeeId(Long.parseLong((String) creatorEmployeeIdObj));
-                log.info("Set Creator Employee ID as String: {}", creatorEmployeeIdObj);
-            }
-
-            // 确保 fault_type1 和 fault_level1 是 String 类型
-            Object faultTypeObj = payload.get("fault_type1");
-            log.info("Fault Type Object: {}", faultTypeObj);
-            if (faultTypeObj instanceof Integer) {
-                mobileSwitchFaultOrders.setFaultType((Integer) faultTypeObj);
-                log.info("Set Fault Type as Integer: {}", faultTypeObj);
-            } else if (faultTypeObj instanceof String) {
-                mobileSwitchFaultOrders.setFaultType(Integer.parseInt((String) faultTypeObj));
-                log.info("Set Fault Type as String: {}", faultTypeObj);
-            }
-
-            Object faultLevelObj = payload.get("fault_level1");
-            log.info("Fault Level Object: {}", faultLevelObj);
-            if (faultLevelObj instanceof Integer) {
-                mobileSwitchFaultOrders.setFaultLevel((Integer) faultLevelObj);
-                log.info("Set Fault Level as Integer: {}", faultLevelObj);
-            } else if (faultLevelObj instanceof String) {
-                mobileSwitchFaultOrders.setFaultLevel(Integer.parseInt((String) faultLevelObj));
-                log.info("Set Fault Level as String: {}", faultLevelObj);
-            }
-
-            mobileSwitchFaultOrders.setSwitchId((String) payload.get("switch_id"));
-            mobileSwitchFaultOrders.setFaultDescription((String) payload.get("fault_description1"));
-            log.info("Set Switch ID: {}", payload.get("switch_id"));
-            log.info("Set Fault Description: {}", payload.get("fault_description1"));
-
-            log.info("MobileSwitchFaultOrders: {}", mobileSwitchFaultOrders);
-
-            mobileSwitchFaultOrdersService.save(mobileSwitchFaultOrders);
-            log.info("Saved MobileSwitchFaultOrders to database.");
-
-            // 处理返回的数据
-            Map<String, Object> result = new HashMap<>();
-            result.put("order_status1", mobileSwitchFaultOrders.getOrderStatus());
-            result.put("submit_date1", mobileSwitchFaultOrders.getSubmitDate());
-            result.put("fault_occurrence_date1", mobileSwitchFaultOrders.getFaultOccurrenceDate());
-            //result.put("processing_unit1", mobileSwitchFaultOrders.getProcessingUnit());
-            result.put("creator_employee_id1", mobileSwitchFaultOrders.getCreatorEmployeeId());
-            result.put("fault_type1", mobileSwitchFaultOrders.getFaultType());
-            result.put("fault_level1", mobileSwitchFaultOrders.getFaultLevel());
-            result.put("switch_id", mobileSwitchFaultOrders.getSwitchId());
-            result.put("fault_description1", mobileSwitchFaultOrders.getFaultDescription());
-
-            // 根据城市名称获取数字值
-            String processingUnit = mobileSwitchFaultOrders.getProcessingUnit();
-            String processingUnitKey = reverseCityMap.get(processingUnit);
-            log.info("城市名称: {}, 对应的数字值: {}", processingUnit, processingUnitKey);
-            result.put("processing_unit1", processingUnitKey);
-
-            return R.success(result);
-
-        } catch (Exception e) {
-            log.error("处理请求时发生异常：", e);
-            return R.error("处理请求时发生异常");
+        if (payload.get("order_status1") instanceof Integer) {
+            System.out.println("order_status1: " + (Integer) payload.get("order_status1"));
+            mobileSwitchFaultOrders.setOrderStatus((Integer) payload.get("order_status1"));
         }
+
+        if (payload.get("submit_date1") instanceof String) {
+            System.out.println("submit_date1: " + payload.get("submit_date1"));
+            java.sql.Date sql_date1 = new java.sql.Date(dateFormat.parse((String) payload.get("submit_date1")).getTime());
+            mobileSwitchFaultOrders.setSubmitDate(sql_date1);
+        }
+
+        if (payload.get("fault_occurrence_date1") instanceof String) {
+            System.out.println("fault_occurrence_date1: " + payload.get("fault_occurrence_date1"));
+            java.sql.Date sql_date2 = new java.sql.Date(dateFormat.parse((String) payload.get("fault_occurrence_date1")).getTime());
+            mobileSwitchFaultOrders.setFaultOccurrenceDate(sql_date2);
+        }
+
+//        if (payload.get("processing_unit1") != null) {
+//            System.out.println("processing_unit1: " + payload.get("processing_unit1").toString());
+//            mobileSwitchFaultOrders.setProcessingUnit(payload.get("processing_unit1").toString());
+//        } else {
+//            throw new RuntimeException("processing_unit1 cannot be null");
+//        }
+
+        // 根据前端传来的值设置城市名称
+        Object cityValueObj = payload.get("processing_unit1");
+        log.info("City Value Object: {}", cityValueObj);
+        String cityName = null;
+        if (cityValueObj instanceof Integer) {
+            cityName = cityMap.get(cityValueObj.toString());
+        } else if (cityValueObj instanceof String) {
+            cityName = cityMap.get((String) cityValueObj);
+        }
+        log.info("Set City Name: {}", cityName);
+        mobileSwitchFaultOrders.setProcessingUnit(cityName);
+
+
+        if (payload.get("creator_employee_id1") instanceof Integer) {
+            System.out.println("creator_employee_id1: " + Long.valueOf(payload.get("creator_employee_id1").toString()));
+            mobileSwitchFaultOrders.setCreatorEmployeeId(Long.valueOf(payload.get("creator_employee_id1").toString()));
+        }
+
+        if (payload.get("fault_type1") instanceof Integer) {
+            System.out.println("fault_type1: " + (Integer) payload.get("fault_type1"));
+            mobileSwitchFaultOrders.setFaultType((Integer) payload.get("fault_type1"));
+        }
+
+        if (payload.get("fault_level1") instanceof Integer) {
+            System.out.println("fault_level1: " + (Integer) payload.get("fault_level1"));
+            mobileSwitchFaultOrders.setFaultLevel((Integer) payload.get("fault_level1"));
+        }
+
+        if (payload.get("switch_id") instanceof String) {
+            System.out.println("switch_id: " + payload.get("switch_id"));
+            mobileSwitchFaultOrders.setSwitchId((String) payload.get("switch_id"));
+        }
+
+        if (payload.get("fault_description1") instanceof String) {
+            System.out.println("fault_description1: " + payload.get("fault_description1"));
+            mobileSwitchFaultOrders.setFaultDescription((String) payload.get("fault_description1"));
+        }
+
+        System.out.println(mobileSwitchFaultOrders);
+        mobileSwithFaultOrdersService.save(mobileSwitchFaultOrders);
+
+        // 处理返回的数据
+        Map<String, Object> result = new HashMap<>();
+        result.put("order_status1", mobileSwitchFaultOrders.getOrderStatus());
+        result.put("submit_date1", mobileSwitchFaultOrders.getSubmitDate());
+        result.put("fault_occurrence_date1", mobileSwitchFaultOrders.getFaultOccurrenceDate());
+        // 根据城市名称获取数字值
+        String processingUnit = mobileSwitchFaultOrders.getProcessingUnit();
+        String processingUnitKey = reverseCityMap.get(processingUnit);
+        log.info("城市名称: {}, 对应的数字值: {}", processingUnit, processingUnitKey);
+        result.put("processing_unit1", processingUnitKey);
+
+        result.put("creator_employee_id1", mobileSwitchFaultOrders.getCreatorEmployeeId());
+        result.put("fault_type1", mobileSwitchFaultOrders.getFaultType());
+        result.put("fault_level1", mobileSwitchFaultOrders.getFaultLevel());
+        result.put("switch_id", mobileSwitchFaultOrders.getSwitchId());
+        result.put("fault_description1", mobileSwitchFaultOrders.getFaultDescription());
+
+        return R.success(result);
+    }
+
+    @PostMapping("/processing")
+    public R processing(HttpServletRequest request,@RequestBody Map<String,Object>payload) throws ParseException{
+
+        int page=1;
+        int pagesize=5;
+        PageInfo<MobileSwitchFaultOrders>  result=mobileSwithFaultOrdersServiceImpl.findMobileSwitchFaultOrders(page,pagesize);
+        return R.success(result);
+    }
+    @PostMapping("/processingDetails")
+    public R processingDetails(HttpServletRequest request,@RequestBody Map<String,Object> payload)throws ParseException{
+        log.info("开始根据id查询。。。");
+        log.info("orderId:{}", payload);
+        String orderId = (String) payload.get("orderId");
+        log.info("orderId:{}",(String) payload.get("orderId"));
+//        int orderId=Integer.parseInt(orderId1);
+        Map<String,Object> result=new HashMap<>();
+        result=mobileSwithFaultOrdersServiceImpl.findByparams(orderId);
+        log.info("result:{}",result);
+        return R.success(result);
+
     }
 }
