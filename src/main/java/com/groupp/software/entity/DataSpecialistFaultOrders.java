@@ -16,7 +16,7 @@ public class DataSpecialistFaultOrders {
     //@TableId(value="order_id",type= IdType.ASSIGN_ID)
     private Long orderId;//工单编号
 
-    private Integer orderStatus;//工单编号
+    private Integer orderStatus;//工单状态
     private Date submitDate;//提交时间
     private Date reviewDate;//审核时间
     private Date completionDate;//处理完成时间

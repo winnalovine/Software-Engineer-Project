@@ -2,15 +2,20 @@ package com.groupp.software.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.github.pagehelper.PageInfo;
 import com.groupp.software.common.R;
 import com.groupp.software.entity.DataSpecialistFaultOrders;
 import com.groupp.software.entity.Employee;
+import com.groupp.software.entity.MobileSwitchFaultOrders;
 import com.groupp.software.service.DataSpecialistFaultOrdersService;
+import com.groupp.software.service.impl.DataSpecialistFaultOrdersServiceImpl;
+import com.groupp.software.service.impl.MobileSwitchFaultOrdersServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,6 +31,8 @@ public class DataSpecialistFaultOrdersController {
     @Autowired
     private DataSpecialistFaultOrdersService dataSpecialistFaultOrdersService;
 
+    @Autowired
+    private DataSpecialistFaultOrdersServiceImpl dataSpecialistFaultOrdersServiceImpl;
 
     // 定义正向映射
     private static final Map<String, String> cityMap = new HashMap<>();
@@ -175,6 +182,39 @@ public class DataSpecialistFaultOrdersController {
         result.put("device_name", dataSpecialistFaultOrders.getDeviceName());
         result.put("fault_description2", dataSpecialistFaultOrders.getFaultDescription());
 
+        return R.success(result);
+
+    }
+
+    @PostMapping("/listpage")
+    public R processing(HttpServletRequest request,@RequestBody Map<String,Object>payload) throws ParseException{
+        log.info("收到的数据：{}", payload.toString());
+        String Spage=(String) payload.get("currentPage");
+        String Spagesize=(String)payload.get("pageSize");
+        String pageshow=(String) payload.get("pageshow");
+        log.info("开始获得session中的职工号employeeId。。");
+        HttpSession session = request.getSession();
+        Long employeeId =(Long) session.getAttribute("employee");
+        log.info("职工号employeeId:{}",employeeId );
+
+        int page=Integer.parseInt(Spage);
+        int pagesize=Integer.parseInt(Spagesize);
+
+        PageInfo<DataSpecialistFaultOrders>  result=dataSpecialistFaultOrdersServiceImpl.findDataSpecialistFaultOrders(page,pagesize,employeeId,pageshow);
+        return R.success(result);
+    }
+    @PostMapping("/Detailsshow")
+    public R processingDetails(HttpServletRequest request,@RequestBody Map<String,Object> payload)throws ParseException{
+
+        log.info("开始根据id查询。。。");
+        log.info("orderId:{}", payload);
+        String orderId = (String) payload.get("orderId");
+        String pageshow=(String) payload.get("pageshow");
+        log.info("orderId:{}",(String) payload.get("orderId"));
+//        int orderId=Integer.parseInt(orderId1);
+        Map<String,Object> result=new HashMap<>();
+        result=dataSpecialistFaultOrdersServiceImpl.findByparams(orderId);
+        log.info("result:{}",result);
         return R.success(result);
 
     }

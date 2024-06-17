@@ -1,13 +1,17 @@
 package com.groupp.software.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.groupp.software.common.R;
+import com.groupp.software.entity.MobileSwitchFaultOrders;
 import com.groupp.software.entity.TransmissionSpecialistFaultOrders;
 import com.groupp.software.service.TransmissionSpecialistFaultOrdersService;
+import com.groupp.software.service.impl.TransmissionSpecialistFaultOrdersServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,6 +26,9 @@ public class TransmissionSpecialistFaultOrdersController {
 
     @Autowired
     private TransmissionSpecialistFaultOrdersService transmissionSpecialistFaultOrdersService;
+
+    @Autowired
+    private TransmissionSpecialistFaultOrdersServiceImpl transmissionSpecialistFaultOrdersServiceImpl;
 
     // 定义正向映射
     private static final Map<String, String> cityMap = new HashMap<>();
@@ -180,9 +187,40 @@ public class TransmissionSpecialistFaultOrdersController {
             return R.error("处理请求时发生异常");
         }
 
+    }
 
+    @PostMapping("/listpage")
+    public R processing(HttpServletRequest request,@RequestBody Map<String,Object>payload) throws ParseException{
+        log.info("收到的数据：{}", payload.toString());
+        String Spage=(String) payload.get("currentPage");
+        String Spagesize=(String)payload.get("pageSize");
+        String pageshow=(String) payload.get("pageshow");
+        log.info("开始获得session中的职工号employeeId。。");
+        HttpSession session = request.getSession();
+        Long employeeId =(Long) session.getAttribute("employee");
+        log.info("职工号employeeId:{}",employeeId );
 
+        int page=Integer.parseInt(Spage);
+        int pagesize=Integer.parseInt(Spagesize);
+
+        PageInfo<TransmissionSpecialistFaultOrders> result=transmissionSpecialistFaultOrdersServiceImpl.findTransmissionSpecialistFaultOrders(page,pagesize,employeeId,pageshow);
+        return R.success(result);
+    }
+    @PostMapping("/Detailsshow")
+    public R processingDetails(HttpServletRequest request,@RequestBody Map<String,Object> payload)throws ParseException{
+
+        log.info("开始根据id查询。。。");
+        log.info("orderId:{}", payload);
+        String orderId = (String) payload.get("orderId");
+        String pageshow=(String) payload.get("pageshow");
+        log.info("orderId:{}",(String) payload.get("orderId"));
+//        int orderId=Integer.parseInt(orderId1);
+        Map<String,Object> result=new HashMap<>();
+        result=transmissionSpecialistFaultOrdersServiceImpl.findByparams(orderId);
+        log.info("result:{}",result);
+        return R.success(result);
 
     }
+
 
 }

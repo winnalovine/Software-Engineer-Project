@@ -12,7 +12,7 @@ public class Employee implements Serializable {
 //    todo 或许uid需要修改
     private static final long serialVersionUID = 1L;
 
-    private Long employeeId;
+    private Long employeeId=1001l;
 
     private String name;
 

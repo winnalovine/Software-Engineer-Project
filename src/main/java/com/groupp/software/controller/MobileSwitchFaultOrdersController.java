@@ -8,7 +8,6 @@ import com.groupp.software.service.impl.MobileSwitchFaultOrdersServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
@@ -173,23 +172,24 @@ public class MobileSwitchFaultOrdersController {
         return R.success(result);
     }
 
-    @PostMapping("/processing")
+    @PostMapping("/listpage")
     public R processing(HttpServletRequest request,@RequestBody Map<String,Object>payload) throws ParseException{
         log.info("收到的数据：{}", payload.toString());
         String Spage=(String) payload.get("currentPage");
         String Spagesize=(String)payload.get("pageSize");
+        String pageshow=(String) payload.get("pageshow");
         log.info("开始获得session中的职工号employeeId。。");
         HttpSession session = request.getSession();
         Long employeeId =(Long) session.getAttribute("employee");
         log.info("职工号employeeId:{}",employeeId );
-        String pageshow=(String) payload.get("pageshow");
+
         int page=Integer.parseInt(Spage);
         int pagesize=Integer.parseInt(Spagesize);
 
         PageInfo<MobileSwitchFaultOrders>  result=mobileSwithFaultOrdersServiceImpl.findMobileSwitchFaultOrders(page,pagesize,employeeId,pageshow);
         return R.success(result);
     }
-    @PostMapping("/processingDetails")
+    @PostMapping("/Detailsshow")
     public R processingDetails(HttpServletRequest request,@RequestBody Map<String,Object> payload)throws ParseException{
 
         log.info("开始根据id查询。。。");
@@ -204,4 +204,5 @@ public class MobileSwitchFaultOrdersController {
         return R.success(result);
 
     }
+
 }
