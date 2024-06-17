@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.groupp.software.mapper.DataSpecialistFaultOrdersMapper">
+    <!--    查询移动表单的工单编号和提交时间，可能要修改函数名称-->
+    <select id="findDataSpecialistFaultOrders" resultType="com.groupp.software.entity.DataSpecialistFaultOrders">
+        SELECT  * FROM data_specialist_fault_orders where (creator_employee_id =#{employeeId})
+        /*处理中*/
+        <if test='pageshow=="0"' >
+            and (order_status=1 or order_status=3 or order_status=5 or order_status=6)
+        </if>
+        /*草稿箱*/
+        <if test='pageshow=="1"'>
+            and order_status=0
+        </if>
+        /*审批失败*/
+        <if test='pageshow=="2"'>
+            and order_status=4
+        </if>
+        /*已完成*/
+        <if test='pageshow=="3"'>
+            and order_status=2
+        </if>
+
+    </select>
+    <select id="findByparams" resultType="com.groupp.software.entity.DataSpecialistFaultOrders">
+            SELECT  * FROM data_specialist_fault_orders where order_id =#{orderId}
+
+
+    </select>
+</mapper>
