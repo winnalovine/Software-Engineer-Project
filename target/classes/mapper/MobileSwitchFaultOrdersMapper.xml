@@ -22,6 +22,11 @@
         <if test='pageshow=="3"'>
             and order_status=2
         </if>
+        /*审核中*/
+        <if test='pageshow=="4"'>
+            and order_status=3
+        </if>
+
 
     </select>
     <select id="findByparams" resultType="com.groupp.software.entity.MobileSwitchFaultOrders">

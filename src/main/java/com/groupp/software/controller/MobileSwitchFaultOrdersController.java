@@ -2,8 +2,10 @@ package com.groupp.software.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.groupp.software.common.R;
+import com.groupp.software.entity.Employee;
 import com.groupp.software.entity.MobileSwitchFaultOrders;
 import com.groupp.software.service.MobileSwitchFaultOrdersService;
+import com.groupp.software.service.impl.EmployeeServiceImpl;
 import com.groupp.software.service.impl.MobileSwitchFaultOrdersServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -27,6 +30,8 @@ public class MobileSwitchFaultOrdersController {
     @Autowired
     private MobileSwitchFaultOrdersServiceImpl mobileSwithFaultOrdersServiceImpl;
 
+    @Autowired
+    private EmployeeServiceImpl employeeServiceImpl;
     // 定义正向映射
     private static final Map<String, String> cityMap = new HashMap<>();
     // 定义反向映射
@@ -199,7 +204,6 @@ public class MobileSwitchFaultOrdersController {
         String orderId = (String) payload.get("orderId");
         String pageshow = (String) payload.get("pageshow");
         log.info("orderId:{}", (String) payload.get("orderId"));
-//        int orderId=Integer.parseInt(orderId1);
         Map<String, Object> result = new HashMap<>();
         result = mobileSwithFaultOrdersServiceImpl.findByparams(orderId);
         log.info("result:{}", result);
@@ -238,7 +242,11 @@ public class MobileSwitchFaultOrdersController {
         result.put("orderStatus",Integer.valueOf(payload.get("orderStatus").toString()));
         result.put("submitDate",new java.sql.Date(dateFormat.parse((String) payload.get("submitDate")).getTime()));
         result.put("faultOccurrenceDate",new java.sql.Date(dateFormat.parse((String) payload.get("faultOccurrenceDate")).getTime()));
-        result.put("processingUnit",(String)payload.get("processingUnit"));
+        String city=(String)payload.get("processingUnit");
+        log.info("数字city:{}",city);
+        city=cityMap.get(city);
+        log.info("汉字city:{}",city);
+        result.put("processingUnit",city);
         result.put("faultType",Integer.valueOf(payload.get("faultType").toString()));
         result.put("faultLevel",Integer.valueOf(payload.get("faultLevel").toString()));
         result.put("switchId",(String)payload.get("switchId"));
@@ -247,4 +255,27 @@ public class MobileSwitchFaultOrdersController {
         Boolean answer=mobileSwithFaultOrdersServiceImpl.updateByparams(result);
         return R.success(answer);
     }
+    @PostMapping("/approverDetailsshow")
+    public R approverDetailsshow(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
+
+        log.info("开始根据id查询。。。");
+        log.info("orderId:{}", payload);
+        String orderId = (String) payload.get("orderId");
+        String pageshow = (String) payload.get("pageshow");
+        log.info("orderId:{}", (String) payload.get("orderId"));
+//        int orderId=Integer.parseInt(orderId1);
+        Map<String, Object> result = new HashMap<>();
+        result = mobileSwithFaultOrdersServiceImpl.findByparams(orderId);
+        log.info("result:{}", result);
+        MobileSwitchFaultOrders mobileSwitchFaultOrders=new MobileSwitchFaultOrders();
+        mobileSwitchFaultOrders=(MobileSwitchFaultOrders)result.get("MobileSwitchFaultOrders");
+        String processingUnit=mobileSwitchFaultOrders.getProcessingUnit();
+        log.info("processingUnit:{}",processingUnit);
+        Integer formatType=0;
+        List<Employee> employees=employeeServiceImpl.findByparams(processingUnit,formatType);
+        result.put("Employees",employees);
+        return R.success(result);
+
+    }
+
 }
