@@ -47,6 +47,14 @@ public class MobileSwitchFaultOrdersServiceImpl extends ServiceImpl<MobileSwitch
         Boolean isSuccess = rowsAffected > 0;
         return isSuccess;
     }
+    //审核用
+    public Boolean updateByparamsForApprover(Map<String ,Object> params){
+        log.info("updateByparamsForApprover...:{}",params);
+        int rowsAffected= baseMapper.updateByparamsForApprover(params);
+        Boolean isSuccess = rowsAffected > 0;
+        return isSuccess;
+    }
+
 
 
 

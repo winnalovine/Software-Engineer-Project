@@ -27,10 +27,5 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
         return employees;
     }
-    public Boolean updateByparams(Map<String ,Object> params){
-        log.info("updateparams...:{}",params);
-        int rowsAffected= baseMapper.updateByparams(params);
-        Boolean isSuccess = rowsAffected > 0;
-        return isSuccess;
-    }
+
 }

@@ -12,6 +12,6 @@ import java.util.Map;
 public interface EmployeeMapper extends BaseMapper<Employee> {
     List<Employee> findByparams(Map<String,Object> params);
 
-    //根据工单编号
-    Integer updateByparams(Map<String,Object>params);
+
+
 }

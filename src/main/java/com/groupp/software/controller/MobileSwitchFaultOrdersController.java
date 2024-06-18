@@ -277,5 +277,39 @@ public class MobileSwitchFaultOrdersController {
         return R.success(result);
 
     }
+    @PostMapping("/approverDetailsFail")
+    public R approverDetailsFail(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
+
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        log.info("从草稿箱接收到的数据。。。：{}",payload);
+        Map<String, Object> result = new HashMap<>();
+        String answer=(String)payload.get("answer");
+        result.put("answer",answer);
+        result.put("reviewDate",new java.sql.Date(dateFormat.parse((String) payload.get("reviewDate")).getTime()));
+        result.put("orderId",Long.valueOf(payload.get("orderId").toString()));
+        result.put("orderStatus",Integer.valueOf(payload.get("orderStatus").toString()));
+        //审核失败 "reviewFeedback":"故障说明不清楚"
+        result.put("reviewFeedback",(String) payload.get("reviewFeedback"));
+        Boolean ans=mobileSwithFaultOrdersServiceImpl.updateByparamsForApprover(result);
+        return R.success(ans);
+    }
+    @PostMapping("/approverDetailsSuccess")
+    public R approverDetailsSuccess(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
+
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        log.info("从草稿箱接收到的数据。。。：{}",payload);
+        Map<String, Object> result = new HashMap<>();
+        String answer=(String)payload.get("answer");
+        result.put("answer",answer);
+        result.put("reviewDate",new java.sql.Date(dateFormat.parse((String) payload.get("reviewDate")).getTime()));
+        result.put("orderId",Long.valueOf(payload.get("orderId").toString()));
+        result.put("orderStatus",Integer.valueOf(payload.get("orderStatus").toString()));
+        result.put("handlerEmployeeId",Long.valueOf(payload.get("handlerEmployeeId").toString()));
+
+        Boolean ans=mobileSwithFaultOrdersServiceImpl.updateByparamsForApprover(result);
+        return R.success(ans);
+    }
 
 }

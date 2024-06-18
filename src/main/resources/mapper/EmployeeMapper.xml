@@ -9,19 +9,6 @@
     <select id="findByparams" resultType="com.groupp.software.entity.Employee">
         SELECT  * FROM employee where (employee_id != 1000 and department_level =#{processingUnit} and department_type=#{formatType} and role_type=2)
     </select>
-    <update id="updateByparams" parameterType="map" >
-        update mobile_switch_fault_orders
-        <if test='answer=="0"'>
-            set order_status=#{orderStatus},
-            submit_date =#{reviewDate},
-            review_feedback=#{reviewFeedback}
-        </if>
-        <if test='answer=="1"'>
-            set order_status=#{orderStatus},
-            submit_date =#{reviewDate},
-            handler_employee_id=#{handlerEmployeeId}
-        </if>
-         where  order_id = #{orderId}
-    </update>
+
 
 </mapper>
