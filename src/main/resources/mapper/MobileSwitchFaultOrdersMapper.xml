@@ -29,4 +29,11 @@
 
 
     </select>
+    <update id="updateByparams" parameterType="map" >
+        update mobile_switch_fault_orders
+        set order_status=#{orderStatus},submit_date =#{submitDate} ,fault_occurrence_date=#{faultOccurrenceDate},
+        processing_unit =#{processingUnit} ,fault_type=#{faultType},fault_level =#{faultLevel},
+        switch_id =#{switchId} ,fault_description=#{faultDescription}
+         where  order_id = #{orderId}
+    </update>
 </mapper>

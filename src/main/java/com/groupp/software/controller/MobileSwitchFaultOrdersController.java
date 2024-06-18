@@ -80,6 +80,7 @@ public class MobileSwitchFaultOrdersController {
         reverseCityMap.put("河源市", "20");
         reverseCityMap.put("湛江市", "21");
     }
+
     @PostMapping("/draftsubmit")
     public R draftsubmit(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
         log.info("草稿箱表单信息：{}", payload.toString());
@@ -173,36 +174,55 @@ public class MobileSwitchFaultOrdersController {
     }
 
     @PostMapping("/listpage")
-    public R processing(HttpServletRequest request,@RequestBody Map<String,Object>payload) throws ParseException{
+    public R processing(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
         log.info("收到的数据：{}", payload.toString());
-        String Spage=(String) payload.get("currentPage");
-        String Spagesize=(String)payload.get("pageSize");
-        String pageshow=(String) payload.get("pageshow");
+        String Spage = (String) payload.get("currentPage");
+        String Spagesize = (String) payload.get("pageSize");
+        String pageshow = (String) payload.get("pageshow");
         log.info("开始获得session中的职工号employeeId。。");
         HttpSession session = request.getSession();
-        Long employeeId =(Long) session.getAttribute("employee");
-        log.info("职工号employeeId:{}",employeeId );
+        Long employeeId = (Long) session.getAttribute("employee");
+        log.info("职工号employeeId:{}", employeeId);
+        employeeId=1001l;
+        int page = Integer.parseInt(Spage);
+        int pagesize = Integer.parseInt(Spagesize);
 
-        int page=Integer.parseInt(Spage);
-        int pagesize=Integer.parseInt(Spagesize);
-
-        PageInfo<MobileSwitchFaultOrders>  result=mobileSwithFaultOrdersServiceImpl.findMobileSwitchFaultOrders(page,pagesize,employeeId,pageshow);
+        PageInfo<MobileSwitchFaultOrders> result = mobileSwithFaultOrdersServiceImpl.findMobileSwitchFaultOrders(page, pagesize, employeeId, pageshow);
         return R.success(result);
     }
+
     @PostMapping("/Detailsshow")
-    public R processingDetails(HttpServletRequest request,@RequestBody Map<String,Object> payload)throws ParseException{
+    public R processingDetails(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
 
         log.info("开始根据id查询。。。");
         log.info("orderId:{}", payload);
         String orderId = (String) payload.get("orderId");
-        String pageshow=(String) payload.get("pageshow");
-        log.info("orderId:{}",(String) payload.get("orderId"));
+        String pageshow = (String) payload.get("pageshow");
+        log.info("orderId:{}", (String) payload.get("orderId"));
 //        int orderId=Integer.parseInt(orderId1);
-        Map<String,Object> result=new HashMap<>();
-        result=mobileSwithFaultOrdersServiceImpl.findByparams(orderId);
-        log.info("result:{}",result);
+        Map<String, Object> result = new HashMap<>();
+        result = mobileSwithFaultOrdersServiceImpl.findByparams(orderId);
+        log.info("result:{}", result);
         return R.success(result);
 
     }
 
+    @PostMapping("/draftsaveForm")
+    public R draftsaveForm(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        log.info("从草稿箱接收到的数据。。。：{}",payload);
+        Map<String, Object> result = new HashMap<>();
+        result.put("orderId",Long.valueOf(payload.get("orderId").toString()));
+        result.put("orderStatus",Integer.valueOf(payload.get("orderStatus").toString()));
+        result.put("submitDate",new java.sql.Date(dateFormat.parse((String) payload.get("submitDate")).getTime()));
+        result.put("faultOccurrenceDate",new java.sql.Date(dateFormat.parse((String) payload.get("faultOccurrenceDate")).getTime()));
+        result.put("processingUnit",(String)payload.get("processingUnit"));
+        result.put("faultType",Integer.valueOf(payload.get("faultType").toString()));
+        result.put("faultLevel",Integer.valueOf(payload.get("faultLevel").toString()));
+        result.put("switchId",(String)payload.get("switchId"));
+        result.put("faultDescription",(String)payload.get("faultDescription"));
+
+        Boolean answer=mobileSwithFaultOrdersServiceImpl.updateByparams(result);
+        return R.success(answer);
+    }
 }

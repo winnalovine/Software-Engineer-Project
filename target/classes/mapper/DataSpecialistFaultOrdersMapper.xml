@@ -25,7 +25,7 @@
 
     </select>
     <select id="findByparams" resultType="com.groupp.software.entity.DataSpecialistFaultOrders">
-            SELECT  * FROM mobile_switch_fault_orders where order_id =#{orderId}
+            SELECT  * FROM data_specialist_fault_orders where order_id =#{orderId}
 
 
     </select>

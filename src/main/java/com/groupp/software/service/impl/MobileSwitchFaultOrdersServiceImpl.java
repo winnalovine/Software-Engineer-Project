@@ -9,6 +9,7 @@ import com.groupp.software.service.MobileSwitchFaultOrdersService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,13 @@ public class MobileSwitchFaultOrdersServiceImpl extends ServiceImpl<MobileSwitch
         result.put("MobileSwitchFaultOrders",mobileSwitchFaultOrders);
         return result;
     }
+    public Boolean updateByparams(Map<String ,Object> params){
+        log.info("updateparams...:{}",params);
+        int rowsAffected= baseMapper.updateByparams(params);
+        Boolean isSuccess = rowsAffected > 0;
+        return isSuccess;
+    }
+
 
 
 }
