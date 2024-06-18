@@ -206,7 +206,29 @@ public class MobileSwitchFaultOrdersController {
         return R.success(result);
 
     }
+    @PostMapping("/draftDetailsshow")
+    public R draftDetailsshow(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
 
+        log.info("开始根据id查询。。。");
+        log.info("orderId:{}", payload);
+        String orderId = (String) payload.get("orderId");
+        String pageshow = (String) payload.get("pageshow");
+        log.info("orderId:{}", (String) payload.get("orderId"));
+//        int orderId=Integer.parseInt(orderId1);
+        Map<String, Object> result = new HashMap<>();
+        result = mobileSwithFaultOrdersServiceImpl.findByparams(orderId);
+        log.info("result:{}", result);
+        log.info("城市:{}",reverseCityMap);
+        MobileSwitchFaultOrders mobileSwitchFaultOrders=new MobileSwitchFaultOrders();
+        mobileSwitchFaultOrders=(MobileSwitchFaultOrders)result.get("MobileSwitchFaultOrders");
+        log.info("城市{}",mobileSwitchFaultOrders.getProcessingUnit());
+        String city=reverseCityMap.get(mobileSwitchFaultOrders.getProcessingUnit());
+        log.info("city:{}",city);
+        mobileSwitchFaultOrders.setProcessingUnit(city);
+        result.put("MobileSwitchFaultOrders",mobileSwitchFaultOrders);
+        return R.success(result);
+
+    }
     @PostMapping("/draftsaveForm")
     public R draftsaveForm(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
