@@ -267,6 +267,7 @@ public class MobileSwitchFaultOrdersController {
         Map<String, Object> result = new HashMap<>();
         result = mobileSwithFaultOrdersServiceImpl.findByparams(orderId);
         log.info("result:{}", result);
+
         MobileSwitchFaultOrders mobileSwitchFaultOrders=new MobileSwitchFaultOrders();
         mobileSwitchFaultOrders=(MobileSwitchFaultOrders)result.get("MobileSwitchFaultOrders");
         String processingUnit=mobileSwitchFaultOrders.getProcessingUnit();

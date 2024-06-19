@@ -24,7 +24,6 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         log.info("params{}",params);
         List<Employee> employees =baseMapper.findByparams(params);
         log.info("employees :{}",employees );
-
         return employees;
     }
 
