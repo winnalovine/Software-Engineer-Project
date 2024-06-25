@@ -27,7 +27,6 @@
             and order_status=3
         </if>
 
-
     </select>
     <select id="findByparams" resultType="com.groupp.software.entity.MobileSwitchFaultOrders">
             SELECT  * FROM mobile_switch_fault_orders where order_id =#{orderId}
