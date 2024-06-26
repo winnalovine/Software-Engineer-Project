@@ -82,4 +82,22 @@
         </if>
         where  order_id = #{orderId}
     </update>
+    <update id="updateOutTimeOrder" parameterType="map" >
+        update mobile_switch_fault_orders
+        <if test='answer=="0"'>
+            set order_status=#{orderStatus},
+            review_date =#{reviewDate},
+            review_feedback=#{reviewFeedback}
+        </if>
+        <if test='answer=="1"'>
+            set order_status=#{orderStatus},
+            review_date =#{reviewDate},
+            handler_employee_id=#{handlerEmployeeId}
+        </if>
+        <if test='answer=="2"'>
+            set order_status=#{orderStatus},
+            completion_date =#{completionDate}
+        </if>
+        where  order_id = #{orderId}
+    </update>
 </mapper>
