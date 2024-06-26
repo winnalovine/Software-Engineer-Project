@@ -15,7 +15,10 @@ public interface TransmissionSpecialistFaultOrdersMapper extends BaseMapper<Tran
     List<TransmissionSpecialistFaultOrders> findTransmissionSpecialistFaultOrders(Map<String,Object> params);
     //根据工单编号
     TransmissionSpecialistFaultOrders findByparams(Map<String,Object>params);
+    //根据工单编号
+    Integer updateByparams(Map<String,Object>params);
 
+    Integer updateByparamsForApprover(Map<String,Object>params);
 }
 
 

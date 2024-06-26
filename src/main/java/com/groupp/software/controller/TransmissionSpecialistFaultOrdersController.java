@@ -2,9 +2,12 @@ package com.groupp.software.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.groupp.software.common.R;
+import com.groupp.software.entity.DataSpecialistFaultOrders;
+import com.groupp.software.entity.Employee;
 import com.groupp.software.entity.MobileSwitchFaultOrders;
 import com.groupp.software.entity.TransmissionSpecialistFaultOrders;
 import com.groupp.software.service.TransmissionSpecialistFaultOrdersService;
+import com.groupp.software.service.impl.EmployeeServiceImpl;
 import com.groupp.software.service.impl.TransmissionSpecialistFaultOrdersServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -29,6 +33,9 @@ public class TransmissionSpecialistFaultOrdersController {
 
     @Autowired
     private TransmissionSpecialistFaultOrdersServiceImpl transmissionSpecialistFaultOrdersServiceImpl;
+
+    @Autowired
+    private EmployeeServiceImpl employeeServiceImpl;
 
     // 定义正向映射
     private static final Map<String, String> cityMap = new HashMap<>();
@@ -220,6 +227,64 @@ public class TransmissionSpecialistFaultOrdersController {
         log.info("result:{}",result);
         return R.success(result);
 
+    }
+
+    @PostMapping("/approverDetailsshow")
+    public R approverDetailsshow(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
+
+        log.info("开始根据id查询。。。");
+        log.info("orderId:{}", payload);
+        String orderId = (String) payload.get("orderId");
+        String pageshow = (String) payload.get("pageshow");
+        log.info("orderId:{}", (String) payload.get("orderId"));
+//        int orderId=Integer.parseInt(orderId1);
+        Map<String, Object> result = new HashMap<>();
+        result = transmissionSpecialistFaultOrdersServiceImpl.findByparams(orderId);
+        log.info("result:{}", result);
+
+        TransmissionSpecialistFaultOrders transmissionSpecialistFaultOrders=new TransmissionSpecialistFaultOrders();
+        transmissionSpecialistFaultOrders=(TransmissionSpecialistFaultOrders) result.get("TransmissionSpecialistFaultOrders");
+        String processingUnit=transmissionSpecialistFaultOrders.getProcessingUnit();
+        log.info("processingUnit:{}",processingUnit);
+        Integer formatType=0;
+        List<Employee> employees=employeeServiceImpl.findByparams(processingUnit,formatType);
+        result.put("Employees",employees);
+        return R.success(result);
+
+    }
+    @PostMapping("/approverDetailsFail")
+    public R approverDetailsFail(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
+
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        log.info("从草稿箱接收到的数据。。。：{}",payload);
+        Map<String, Object> result = new HashMap<>();
+        String answer=(String)payload.get("answer");
+        result.put("answer",answer);
+        result.put("reviewDate",new java.sql.Date(dateFormat.parse((String) payload.get("reviewDate")).getTime()));
+        result.put("orderId",Long.valueOf(payload.get("orderId").toString()));
+        result.put("orderStatus",Integer.valueOf(payload.get("orderStatus").toString()));
+        //审核失败 "reviewFeedback":"故障说明不清楚"
+        result.put("reviewFeedback",(String) payload.get("reviewFeedback"));
+        Boolean ans=transmissionSpecialistFaultOrdersServiceImpl.updateByparamsForApprover(result);
+        return R.success(ans);
+    }
+    @PostMapping("/approverDetailsSuccess")
+    public R approverDetailsSuccess(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
+
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        log.info("从草稿箱接收到的数据。。。：{}",payload);
+        Map<String, Object> result = new HashMap<>();
+        String answer=(String)payload.get("answer");
+        result.put("answer",answer);
+        result.put("reviewDate",new java.sql.Date(dateFormat.parse((String) payload.get("reviewDate")).getTime()));
+        result.put("orderId",Long.valueOf(payload.get("orderId").toString()));
+        result.put("orderStatus",Integer.valueOf(payload.get("orderStatus").toString()));
+        result.put("handlerEmployeeId",Long.valueOf(payload.get("handlerEmployeeId").toString()));
+
+        Boolean ans=transmissionSpecialistFaultOrdersServiceImpl.updateByparamsForApprover(result);
+        return R.success(ans);
     }
 
 

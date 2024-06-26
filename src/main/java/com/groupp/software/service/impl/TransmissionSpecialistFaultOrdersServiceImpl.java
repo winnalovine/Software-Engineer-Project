@@ -41,5 +41,19 @@ public class TransmissionSpecialistFaultOrdersServiceImpl extends ServiceImpl<Tr
         result.put("TransmissionSpecialistFaultOrders",transmissionSpecialistFaultOrders);
         return result;
     }
+    public Boolean updateByparams(Map<String ,Object> params){
+        log.info("updateparams...:{}",params);
+        int rowsAffected= baseMapper.updateByparams(params);
+        Boolean isSuccess = rowsAffected > 0;
+        return isSuccess;
+    }
+    //审核用
+    public Boolean updateByparamsForApprover(Map<String ,Object> params){
+        log.info("updateByparamsForApprover...:{}",params);
+        int rowsAffected= baseMapper.updateByparamsForApprover(params);
+        Boolean isSuccess = rowsAffected > 0;
+        return isSuccess;
+    }
+
 }
 
