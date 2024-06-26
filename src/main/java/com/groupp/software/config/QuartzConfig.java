@@ -21,8 +21,8 @@ public class QuartzConfig {
                 .forJob(jobDetail)
                 .withIdentity("checkOutTimeOrdersTrigger")
                 .withSchedule(SimpleScheduleBuilder.simpleSchedule()
-//                        .withIntervalInHours(24)
-                        .withIntervalInSeconds(10)
+                        .withIntervalInHours(24)
+//                        .withIntervalInSeconds(10)
                         .repeatForever())
                 .build();
     }

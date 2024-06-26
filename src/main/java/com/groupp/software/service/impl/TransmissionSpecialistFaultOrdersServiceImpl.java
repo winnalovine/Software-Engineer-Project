@@ -55,5 +55,10 @@ public class TransmissionSpecialistFaultOrdersServiceImpl extends ServiceImpl<Tr
         return isSuccess;
     }
 
+    public Integer updateOutTimeOrder(){
+        log.info("updateOutTimeOrder...:{}");
+        Integer rowsAffected= baseMapper.updateOutTimeOrder();
+        return rowsAffected;
+    }
 }
 

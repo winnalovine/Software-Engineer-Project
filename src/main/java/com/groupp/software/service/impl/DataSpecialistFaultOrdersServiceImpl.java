@@ -81,6 +81,11 @@ public class DataSpecialistFaultOrdersServiceImpl extends ServiceImpl<DataSpecia
         Boolean isSuccess = rowsAffected > 0;
         return isSuccess;
     }
+    public Integer updateOutTimeOrder(){
+        log.info("updateOutTimeOrder...:{}");
+        Integer rowsAffected= baseMapper.updateOutTimeOrder();
+        return rowsAffected;
+    }
 
 
 }

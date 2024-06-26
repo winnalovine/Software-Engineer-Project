@@ -18,4 +18,7 @@ public interface DataSpecialistFaultOrdersMapper extends BaseMapper<DataSpeciali
     Integer updateByparams(Map<String,Object>params);
 
     Integer updateByparamsForApprover(Map<String,Object>params);
+
+    //超时
+    Integer updateOutTimeOrder();
 }
