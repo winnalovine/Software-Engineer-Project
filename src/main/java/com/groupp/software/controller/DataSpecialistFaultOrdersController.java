@@ -27,7 +27,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @CrossOrigin(/*origins = "http://localhost:8081"*/)
-@RequestMapping("/dataspecialistfaultorders")
+@RequestMapping("/dataSpecialistfaultOrders")
 public class DataSpecialistFaultOrdersController {
 
     @Autowired
@@ -246,6 +246,28 @@ public class DataSpecialistFaultOrdersController {
         return R.success(result);
 
     }
+    @PostMapping("/draftsaveForm")
+    public R draftsaveForm(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        log.info("从草稿箱接收到的数据。。。：{}",payload);
+        Map<String, Object> result = new HashMap<>();
+        result.put("orderId",Long.valueOf(payload.get("orderId").toString()));
+        result.put("orderStatus",Integer.valueOf(payload.get("orderStatus").toString()));
+        result.put("submitDate",new java.sql.Date(dateFormat.parse((String) payload.get("submitDate")).getTime()));
+        result.put("faultOccurrenceDate",new java.sql.Date(dateFormat.parse((String) payload.get("faultOccurrenceDate")).getTime()));
+        String city=(String)payload.get("processingUnit");
+        log.info("数字city:{}",city);
+        city=cityMap.get(city);
+        log.info("汉字city:{}",city);
+        result.put("processingUnit",city);
+        result.put("faultType",Integer.valueOf(payload.get("faultType").toString()));
+        result.put("faultLevel",Integer.valueOf(payload.get("faultLevel").toString()));
+        result.put("switchId",(String)payload.get("switchId"));
+        result.put("faultDescription",(String)payload.get("faultDescription"));
+
+        Boolean answer=dataSpecialistFaultOrdersServiceImpl.updateByparams(result);
+        return R.success(answer);
+    }
 
     @PostMapping("/approverDetailsshow")
     public R approverDetailsshow(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
@@ -304,6 +326,20 @@ public class DataSpecialistFaultOrdersController {
         Boolean ans=dataSpecialistFaultOrdersServiceImpl.updateByparamsForApprover(result);
         return R.success(ans);
     }
+    @PostMapping("/processorComplete")
+    public R processorComplete(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
 
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        log.info("从草稿箱接收到的数据。。。：{}",payload);
+        Map<String, Object> result = new HashMap<>();
+        String answer=(String)payload.get("answer");
+        result.put("answer",answer);
+        result.put("completionDate",new java.sql.Date(dateFormat.parse((String) payload.get("completionDate")).getTime()));
+        result.put("orderId",Long.valueOf(payload.get("orderId").toString()));
+        result.put("orderStatus",Integer.valueOf(payload.get("orderStatus").toString()));
+        Boolean ans=dataSpecialistFaultOrdersServiceImpl.updateByparamsForApprover(result);
+        return R.success(ans);
+    }
 
 }
