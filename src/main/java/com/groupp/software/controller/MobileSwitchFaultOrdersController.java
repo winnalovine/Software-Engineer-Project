@@ -313,5 +313,20 @@ public class MobileSwitchFaultOrdersController {
         Boolean ans=mobileSwithFaultOrdersServiceImpl.updateByparamsForApprover(result);
         return R.success(ans);
     }
+    @PostMapping("/processorComplete")
+    public R processorComplete(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
+
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        log.info("从草稿箱接收到的数据。。。：{}",payload);
+        Map<String, Object> result = new HashMap<>();
+        String answer=(String)payload.get("answer");
+        result.put("answer",answer);
+        result.put("completionDate",new java.sql.Date(dateFormat.parse((String) payload.get("completionDate")).getTime()));
+        result.put("orderId",Long.valueOf(payload.get("orderId").toString()));
+        result.put("orderStatus",Integer.valueOf(payload.get("orderStatus").toString()));
+        Boolean ans=mobileSwithFaultOrdersServiceImpl.updateByparamsForApprover(result);
+        return R.success(ans);
+    }
 
 }

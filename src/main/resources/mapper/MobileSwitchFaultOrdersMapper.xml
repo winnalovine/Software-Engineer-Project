@@ -76,6 +76,10 @@
             review_date =#{reviewDate},
             handler_employee_id=#{handlerEmployeeId}
         </if>
+        <if test='answer=="2"'>
+            set order_status=#{orderStatus},
+            completion_date =#{completionDate}
+        </if>
         where  order_id = #{orderId}
     </update>
 </mapper>
