@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.groupp.software.common.R;
 import com.groupp.software.entity.Employee;
 import com.groupp.software.service.EmployeeService;
+import com.groupp.software.service.impl.EmployeeServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,9 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private EmployeeServiceImpl employeeServiceImpl;
 
     //todo 可能要修改映射位置
     @PostMapping("/login")
@@ -121,5 +125,14 @@ public class EmployeeController {
 
     }
 
+    //获得处理人所在部门
+    @PostMapping("/getDepartmentTypeOfProcessor")
+    public R getDepartmentTypeOfProcessor(HttpServletRequest request, @RequestBody Map<String, Object> payload){
+        //todo 解决跨域问题通过session获得员工号
+        Long employeeId=1001l;
+        Employee employee=employeeServiceImpl.findById(employeeId);
+        log.info("employee:{}",employee);
+        return R.success(employee);
+    }
 
 }

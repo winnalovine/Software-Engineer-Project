@@ -26,5 +26,15 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         log.info("employees :{}",employees );
         return employees;
     }
+    public Employee findById(Long employeeId){
+        Map<String ,Object> params= new HashMap<>();
+//        params.put("pageshow",pageshow);
+        params.put("employeeId",employeeId);;
+        log.info("params{}",params);
+        Employee employee =baseMapper.findById(params);
+        log.info("employees :{}",employee );
+        return employee;
+    }
+
 
 }

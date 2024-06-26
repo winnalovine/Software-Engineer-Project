@@ -11,6 +11,7 @@ import java.util.Map;
 @Mapper
 public interface EmployeeMapper extends BaseMapper<Employee> {
     List<Employee> findByparams(Map<String,Object> params);
+    Employee findById(Map<String,Object> params);
 
 
 
