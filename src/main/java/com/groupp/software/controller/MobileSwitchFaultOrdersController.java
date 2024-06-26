@@ -188,6 +188,7 @@ public class MobileSwitchFaultOrdersController {
         HttpSession session = request.getSession();
         Long employeeId = (Long) session.getAttribute("employee");
         log.info("职工号employeeId:{}", employeeId);
+        //todo 解决跨域问题，真正得到employeeid
         employeeId=1001l;
         int page = Integer.parseInt(Spage);
         int pagesize = Integer.parseInt(Spagesize);
