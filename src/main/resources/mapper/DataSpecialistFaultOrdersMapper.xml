@@ -26,6 +26,27 @@
         <if test='pageshow=="4"'>
         and order_status=3
         </if>
+        /*处理人*/
+        -- 待处理
+        <if test='pageshow=="5"'>
+            where (handler_employee_id =#{employeeId})
+            and order_status=1
+        </if>
+        --         加急处理
+        <if test='pageshow=="6"'>
+            where (handler_employee_id =#{employeeId})
+            and order_status=6
+        </if>
+        --         处理超时
+        <if test='pageshow=="7"'>
+            where (handler_employee_id =#{employeeId})
+            and order_status=5
+        </if>
+        --         处理完成
+        <if test='pageshow=="8"'>
+            where (handler_employee_id =#{employeeId})
+            and order_status=2
+        </if>
 
     </select>
     <select id="findByparams" resultType="com.groupp.software.entity.DataSpecialistFaultOrders">
@@ -51,6 +72,10 @@
             set order_status=#{orderStatus},
             review_date =#{reviewDate},
             handler_employee_id=#{handlerEmployeeId}
+        </if>
+        <if test='answer=="2"'>
+            set order_status=#{orderStatus},
+            completion_date =#{completionDate}
         </if>
         where  order_id = #{orderId}
     </update>
