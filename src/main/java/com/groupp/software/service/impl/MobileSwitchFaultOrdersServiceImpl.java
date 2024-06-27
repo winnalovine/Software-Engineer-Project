@@ -23,6 +23,10 @@ public class MobileSwitchFaultOrdersServiceImpl extends ServiceImpl<MobileSwitch
         PageHelper.startPage(page,size);
         Map<String ,Object> params= new HashMap<>();
         params.put("pageshow",pageshow);
+//        if(pageshow!="2"&&pageshow!="4")
+//        {
+//            params.put("employeeId",employeeId);
+//        }
         params.put("employeeId",employeeId);
         log.info("params{}",params);
         log.info("employeeId:{}",employeeId);

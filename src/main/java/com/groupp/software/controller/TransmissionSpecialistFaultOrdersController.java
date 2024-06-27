@@ -312,7 +312,7 @@ public class TransmissionSpecialistFaultOrdersController {
         transmissionSpecialistFaultOrders=(TransmissionSpecialistFaultOrders) result.get("TransmissionSpecialistFaultOrders");
         String processingUnit=transmissionSpecialistFaultOrders.getProcessingUnit();
         log.info("processingUnit:{}",processingUnit);
-        Integer formatType=0;
+        Integer formatType=2;
         List<Employee> employees=employeeServiceImpl.findByparams(processingUnit,formatType);
         result.put("Employees",employees);
         return R.success(result);

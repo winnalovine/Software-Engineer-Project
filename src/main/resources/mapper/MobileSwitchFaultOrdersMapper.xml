@@ -18,7 +18,7 @@
         </if>
 
         <if test='pageshow=="2"'>
-            and order_status=4
+            where order_status=4
         </if>
 
         <if test='pageshow=="3"'>
@@ -27,7 +27,7 @@
         </if>
 
         <if test='pageshow=="4"'>
-            and order_status=3
+            where order_status=3
         </if>
 
         <if test='pageshow=="5"'>

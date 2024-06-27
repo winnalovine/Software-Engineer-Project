@@ -307,7 +307,7 @@ public class DataSpecialistFaultOrdersController {
         dataSpecialistFaultOrders=(DataSpecialistFaultOrders) result.get("DataSpecialistFaultOrders");
         String processingUnit=dataSpecialistFaultOrders.getProcessingUnit();
         log.info("processingUnit:{}",processingUnit);
-        Integer formatType=0;
+        Integer formatType=1;
         List<Employee> employees=employeeServiceImpl.findByparams(processingUnit,formatType);
         result.put("Employees",employees);
         return R.success(result);
