@@ -155,11 +155,9 @@ public class MobileSwitchFaultOrdersController {
         result.put("list",pageInfo.getList());
         log.info("result..{}",result);
         List<MobileSwitchFaultOrders> mobileSwitchFaultOrders=(List<MobileSwitchFaultOrders>) result.get("list");
-        log.info("转换时间类型前分页展示的数据。。：{}",mobileSwitchFaultOrders.get(0).getSubmitDate());
-
+//        log.info("转换时间类型前分页展示的数据。。：{}",mobileSwitchFaultOrders.get(0).getSubmitDate());
         List<DateString> dateStrings=new LinkedList<>();
-
-        for(int i=0;i<pagesize;i++){
+        for(int i=0;i<pagesize&&i<pageInfo.getSize();i++){
             log.info("第{}次转换时间格式",i);
             DateString dateString=new DateString();
             dateString.setSubmitDate(mobileSwitchFaultOrders.get(i).getSubmitDate());
