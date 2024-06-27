@@ -246,6 +246,7 @@ public class DataSpecialistFaultOrdersController {
         return R.success(result);
 
     }
+
     @PostMapping("/draftsaveForm")
     public R draftsaveForm(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -262,7 +263,8 @@ public class DataSpecialistFaultOrdersController {
         result.put("processingUnit",city);
         result.put("faultType",Integer.valueOf(payload.get("faultType").toString()));
         result.put("faultLevel",Integer.valueOf(payload.get("faultLevel").toString()));
-        result.put("switchId",(String)payload.get("switchId"));
+        result.put("netWork",(String)payload.get("netWork"));
+        result.put("deviceName",(String)payload.get("deviceName"));
         result.put("faultDescription",(String)payload.get("faultDescription"));
 
         Boolean answer=dataSpecialistFaultOrdersServiceImpl.updateByparams(result);

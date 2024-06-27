@@ -58,7 +58,7 @@
         update data_specialist_fault_orders
         set order_status=#{orderStatus},submit_date =#{submitDate} ,fault_occurrence_date=#{faultOccurrenceDate},
         processing_unit =#{processingUnit} ,fault_type=#{faultType},fault_level =#{faultLevel},
-        switch_id =#{switchId} ,fault_description=#{faultDescription}
+        net_work =#{netWork} ,device_name=#{deviceName},fault_description=#{faultDescription}
          where  order_id = #{orderId}
     </update>
     <update id="updateByparamsForApprover" parameterType="map" >

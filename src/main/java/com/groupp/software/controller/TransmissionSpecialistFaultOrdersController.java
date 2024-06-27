@@ -228,6 +228,29 @@ public class TransmissionSpecialistFaultOrdersController {
         return R.success(result);
 
     }
+    @PostMapping("/draftDetailsshow")
+    public R draftDetailsshow(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
+
+        log.info("开始根据id查询。。。");
+        log.info("orderId:{}", payload);
+        String orderId = (String) payload.get("orderId");
+        String pageshow = (String) payload.get("pageshow");
+        log.info("orderId:{}", (String) payload.get("orderId"));
+//        int orderId=Integer.parseInt(orderId1);
+        Map<String, Object> result = new HashMap<>();
+        result = transmissionSpecialistFaultOrdersServiceImpl.findByparams(orderId);
+        log.info("result:{}", result);
+        log.info("城市:{}",reverseCityMap);
+        TransmissionSpecialistFaultOrders transmissionSpecialistFaultOrders=new TransmissionSpecialistFaultOrders();
+        transmissionSpecialistFaultOrders=(TransmissionSpecialistFaultOrders) result.get("TransmissionSpecialistFaultOrders");
+        log.info("城市{}",transmissionSpecialistFaultOrders.getProcessingUnit());
+        String city=reverseCityMap.get(transmissionSpecialistFaultOrders.getProcessingUnit());
+        log.info("city:{}",city);
+        transmissionSpecialistFaultOrders.setProcessingUnit(city);
+        result.put("TransmissionSpecialistFaultOrders",transmissionSpecialistFaultOrders);
+        return R.success(result);
+
+    }
     @PostMapping("/draftsaveForm")
     public R draftsaveForm(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -244,7 +267,7 @@ public class TransmissionSpecialistFaultOrdersController {
         result.put("processingUnit",city);
         result.put("faultType",Integer.valueOf(payload.get("faultType").toString()));
         result.put("faultLevel",Integer.valueOf(payload.get("faultLevel").toString()));
-        result.put("switchId",(String)payload.get("switchId"));
+        result.put("faultSegment:",(String)payload.get("faultSegment"));
         result.put("faultDescription",(String)payload.get("faultDescription"));
 
         Boolean answer=transmissionSpecialistFaultOrdersServiceImpl.updateByparams(result);
