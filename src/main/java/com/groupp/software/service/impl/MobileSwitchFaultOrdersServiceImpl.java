@@ -3,6 +3,7 @@ package com.groupp.software.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.groupp.software.common.DateString;
 import com.groupp.software.entity.MobileSwitchFaultOrders;
 import com.groupp.software.mapper.MobileSwitchFaultOrdersMapper;
 import com.groupp.software.service.MobileSwitchFaultOrdersService;
@@ -38,7 +39,16 @@ public class MobileSwitchFaultOrdersServiceImpl extends ServiceImpl<MobileSwitch
         MobileSwitchFaultOrders mobileSwitchFaultOrders =baseMapper.findByparams(params);
         log.info("MobileSwitchFaultOrders:{}",mobileSwitchFaultOrders);
         Map<String,Object> result=new HashMap<>();
+        DateString dateString=new DateString();
+        dateString.setOrderId(mobileSwitchFaultOrders.getOrderId());
+        dateString.setSubmitDate(mobileSwitchFaultOrders.getSubmitDate());
+        dateString.setReviewDate(mobileSwitchFaultOrders.getReviewDate());
+        dateString.setCompletionDate(mobileSwitchFaultOrders.getCompletionDate());
+        dateString.setFaultOccurrenceDate(mobileSwitchFaultOrders.getFaultOccurrenceDate());
+        dateString.printAll();
         result.put("MobileSwitchFaultOrders",mobileSwitchFaultOrders);
+        result.put("dates",dateString);
+
         return result;
     }
     public Boolean updateByparams(Map<String ,Object> params){
