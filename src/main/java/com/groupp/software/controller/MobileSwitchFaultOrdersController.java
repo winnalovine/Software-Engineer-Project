@@ -1,6 +1,7 @@
 package com.groupp.software.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.groupp.software.common.CityMapping;
 import com.groupp.software.common.R;
 import com.groupp.software.entity.Employee;
 import com.groupp.software.entity.MobileSwitchFaultOrders;
@@ -12,12 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -32,59 +31,15 @@ public class MobileSwitchFaultOrdersController {
 
     @Autowired
     private EmployeeServiceImpl employeeServiceImpl;
+    @Autowired
+    private CityMapping cityMapping;
+
+
     // 定义正向映射
-    private static final Map<String, String> cityMap = new HashMap<>();
+    private static final Map<String, String> cityMap = CityMapping.getCityMap();
     // 定义反向映射
-    private static final Map<String, String> reverseCityMap = new HashMap<>();
+    private static final Map<String, String> reverseCityMap =CityMapping.getReverseCityMap();
 
-    static {
-        cityMap.put("0", "广州省");
-        cityMap.put("1", "广州市");
-        cityMap.put("2", "深圳市");
-        cityMap.put("3", "佛山市");
-        cityMap.put("4", "东莞市");
-        cityMap.put("5", "中山市");
-        cityMap.put("6", "珠海市");
-        cityMap.put("7", "江门市");
-        cityMap.put("8", "肇庆市");
-        cityMap.put("9", "惠州市");
-        cityMap.put("10", "汕头市");
-        cityMap.put("11", "潮州市");
-        cityMap.put("12", "揭阳市");
-        cityMap.put("13", "汕尾市");
-        cityMap.put("14", "茂名市");
-        cityMap.put("15", "阳江市");
-        cityMap.put("16", "云浮市");
-        cityMap.put("17", "韶关市");
-        cityMap.put("18", "清远市");
-        cityMap.put("19", "梅州市");
-        cityMap.put("20", "河源市");
-        cityMap.put("21", "湛江市");
-
-        // 初始化反向映射
-        reverseCityMap.put("广州省", "0");
-        reverseCityMap.put("广州市", "1");
-        reverseCityMap.put("深圳市", "2");
-        reverseCityMap.put("佛山市", "3");
-        reverseCityMap.put("东莞市", "4");
-        reverseCityMap.put("中山市", "5");
-        reverseCityMap.put("珠海市", "6");
-        reverseCityMap.put("江门市", "7");
-        reverseCityMap.put("肇庆市", "8");
-        reverseCityMap.put("惠州市", "9");
-        reverseCityMap.put("汕头市", "10");
-        reverseCityMap.put("潮州市", "11");
-        reverseCityMap.put("揭阳市", "12");
-        reverseCityMap.put("汕尾市", "13");
-        reverseCityMap.put("茂名市", "14");
-        reverseCityMap.put("阳江市", "15");
-        reverseCityMap.put("云浮市", "16");
-        reverseCityMap.put("韶关市", "17");
-        reverseCityMap.put("清远市", "18");
-        reverseCityMap.put("梅州市", "19");
-        reverseCityMap.put("河源市", "20");
-        reverseCityMap.put("湛江市", "21");
-    }
 
     @PostMapping("/draftsubmit")
     public R draftsubmit(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws ParseException {
@@ -193,7 +148,27 @@ public class MobileSwitchFaultOrdersController {
         int page = Integer.parseInt(Spage);
         int pagesize = Integer.parseInt(Spagesize);
 
-        PageInfo<MobileSwitchFaultOrders> result = mobileSwithFaultOrdersServiceImpl.findMobileSwitchFaultOrders(page, pagesize, employeeId, pageshow);
+        PageInfo<MobileSwitchFaultOrders> pageInfo = mobileSwithFaultOrdersServiceImpl.findMobileSwitchFaultOrders(page, pagesize, employeeId, pageshow);
+        Map<String,Object> result=new HashMap<>();
+        result.put("total",pageInfo.getTotal());
+        result.put("list",pageInfo.getList());
+        log.info("result..{}",result);
+        List<MobileSwitchFaultOrders> mobileSwitchFaultOrders=(List<MobileSwitchFaultOrders>) result.get("list");
+        log.info("转换时间类型前分页展示的数据。。：{}",mobileSwitchFaultOrders.get(0).getSubmitDate());
+
+        Map<String,String> dateStrings=new HashMap<>();
+        dateStrings.put("submitDate",null);
+        dateStrings.put("reviewDate",null);
+        dateStrings.put("completionDate",null);
+        dateStrings.put("faultOccurrenceDate",null);
+
+        DateFormat formate1 = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = formate1.format(mobileSwitchFaultOrders.get(0).getSubmitDate());
+        log.info("{}",dateString);
+        log.info("转换时间类型后分页展示的数据。。：{}",mobileSwitchFaultOrders);
+
+        result.put("DateList",dateString);
+        log.info("分页展示的数据。。：{}",result);
         return R.success(result);
     }
 
