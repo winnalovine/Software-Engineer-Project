@@ -3,6 +3,7 @@ package com.groupp.software.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.github.pagehelper.PageInfo;
+import com.groupp.software.common.DateString;
 import com.groupp.software.common.R;
 import com.groupp.software.entity.DataSpecialistFaultOrders;
 import com.groupp.software.entity.Employee;
@@ -19,10 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -201,11 +199,32 @@ public class DataSpecialistFaultOrdersController {
         HttpSession session = request.getSession();
         Long employeeId =(Long) session.getAttribute("employee");
         log.info("职工号employeeId:{}",employeeId );
-
+        employeeId=1001l;
         int page=Integer.parseInt(Spage);
         int pagesize=Integer.parseInt(Spagesize);
 
-        PageInfo<DataSpecialistFaultOrders>  result=dataSpecialistFaultOrdersServiceImpl.findDataSpecialistFaultOrders(page,pagesize,employeeId,pageshow);
+        PageInfo<DataSpecialistFaultOrders> pageInfo = dataSpecialistFaultOrdersServiceImpl.findDataSpecialistFaultOrders(page, pagesize, employeeId, pageshow);
+        Map<String,Object> result=new HashMap<>();
+        result.put("total",pageInfo.getTotal());
+        result.put("list",pageInfo.getList());
+        log.info("result..{}",result);
+        List<DataSpecialistFaultOrders> dataSpecialistFaultOrders=(List<DataSpecialistFaultOrders>) result.get("list");
+
+        List<DateString> dateStrings=new LinkedList<>();
+        for(int i=0;i<pagesize&&i<pageInfo.getSize();i++){
+            log.info("第{}次转换时间格式",i);
+            DateString dateString=new DateString();
+            dateString.setOrderId(dataSpecialistFaultOrders.get(i).getOrderId());
+            dateString.setSubmitDate(dataSpecialistFaultOrders.get(i).getSubmitDate());
+            dateString.setReviewDate(dataSpecialistFaultOrders.get(i).getReviewDate());
+            dateString.setCompletionDate(dataSpecialistFaultOrders.get(i).getCompletionDate());
+            dateString.setFaultOccurrenceDate(dataSpecialistFaultOrders.get(i).getFaultOccurrenceDate());
+            dateString.printAll();
+            dateStrings.add(dateString);
+            log.info("修改后的datestrings：{}",dateStrings);
+        }
+        result.put("DateList",dateStrings);
+        log.info("分页展示的数据。。：{}",result);
         return R.success(result);
     }
     @PostMapping("/Detailsshow")

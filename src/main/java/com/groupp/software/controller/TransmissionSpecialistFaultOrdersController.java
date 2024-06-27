@@ -1,6 +1,7 @@
 package com.groupp.software.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.groupp.software.common.DateString;
 import com.groupp.software.common.R;
 import com.groupp.software.entity.DataSpecialistFaultOrders;
 import com.groupp.software.entity.Employee;
@@ -17,10 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -206,11 +204,34 @@ public class TransmissionSpecialistFaultOrdersController {
         HttpSession session = request.getSession();
         Long employeeId =(Long) session.getAttribute("employee");
         log.info("职工号employeeId:{}",employeeId );
-
+        //todo 待解决的问题
+        employeeId=1001l;
         int page=Integer.parseInt(Spage);
         int pagesize=Integer.parseInt(Spagesize);
 
-        PageInfo<TransmissionSpecialistFaultOrders> result=transmissionSpecialistFaultOrdersServiceImpl.findTransmissionSpecialistFaultOrders(page,pagesize,employeeId,pageshow);
+
+        PageInfo<TransmissionSpecialistFaultOrders> pageInfo = transmissionSpecialistFaultOrdersServiceImpl.findTransmissionSpecialistFaultOrders(page,pagesize,employeeId,pageshow);
+        Map<String,Object> result=new HashMap<>();
+        result.put("total",pageInfo.getTotal());
+        result.put("list",pageInfo.getList());
+        log.info("result..{}",result);
+        List<TransmissionSpecialistFaultOrders> transmissionSpecialistFaultOrders=(List<TransmissionSpecialistFaultOrders>) result.get("list");
+
+        List<DateString> dateStrings=new LinkedList<>();
+        for(int i=0;i<pagesize&&i<pageInfo.getSize();i++){
+            log.info("第{}次转换时间格式",i);
+            DateString dateString=new DateString();
+            dateString.setOrderId(transmissionSpecialistFaultOrders.get(i).getOrderId());
+            dateString.setSubmitDate(transmissionSpecialistFaultOrders.get(i).getSubmitDate());
+            dateString.setReviewDate(transmissionSpecialistFaultOrders.get(i).getReviewDate());
+            dateString.setCompletionDate(transmissionSpecialistFaultOrders.get(i).getCompletionDate());
+            dateString.setFaultOccurrenceDate(transmissionSpecialistFaultOrders.get(i).getFaultOccurrenceDate());
+            dateString.printAll();
+            dateStrings.add(dateString);
+            log.info("修改后的datestrings：{}",dateStrings);
+        }
+        result.put("DateList",dateStrings);
+        log.info("分页展示的数据。。：{}",result);
         return R.success(result);
     }
     @PostMapping("/Detailsshow")

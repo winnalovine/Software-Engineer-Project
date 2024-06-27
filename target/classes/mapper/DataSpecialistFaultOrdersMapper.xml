@@ -79,4 +79,9 @@
         </if>
         where  order_id = #{orderId}
     </update>
+    <update id="updateOutTimeOrder" parameterType="map" >
+       update data_specialist_fault_orders
+       set order_status=5
+       where (order_status=1 or order_status=6) and  DATEDIFF(curdate(),review_date)>3
+    </update>
 </mapper>

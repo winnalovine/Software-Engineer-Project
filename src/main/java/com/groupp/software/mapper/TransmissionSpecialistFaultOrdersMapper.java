@@ -19,6 +19,9 @@ public interface TransmissionSpecialistFaultOrdersMapper extends BaseMapper<Tran
     Integer updateByparams(Map<String,Object>params);
 
     Integer updateByparamsForApprover(Map<String,Object>params);
+
+    //超时
+    Integer updateOutTimeOrder();
 }
 
 

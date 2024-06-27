@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.groupp.software.common.DateString;
 import com.groupp.software.entity.DataSpecialistFaultOrders;
 import com.groupp.software.entity.MobileSwitchFaultOrders;
 import com.groupp.software.mapper.DataSpecialistFaultOrdersMapper;
@@ -65,7 +66,15 @@ public class DataSpecialistFaultOrdersServiceImpl extends ServiceImpl<DataSpecia
         DataSpecialistFaultOrders dataSpecialistFaultOrders =baseMapper.findByparams(params);
         log.info("DataSpecialistFaultOrders:{}",dataSpecialistFaultOrders);
         Map<String,Object> result=new HashMap<>();
+        DateString dateString=new DateString();
+        dateString.setOrderId(dataSpecialistFaultOrders.getOrderId());
+        dateString.setSubmitDate(dataSpecialistFaultOrders.getSubmitDate());
+        dateString.setReviewDate(dataSpecialistFaultOrders.getReviewDate());
+        dateString.setCompletionDate(dataSpecialistFaultOrders.getCompletionDate());
+        dateString.setFaultOccurrenceDate(dataSpecialistFaultOrders.getFaultOccurrenceDate());
+        dateString.printAll();
         result.put("DataSpecialistFaultOrders",dataSpecialistFaultOrders);
+        result.put("dates",dateString);
         return result;
     }
     public Boolean updateByparams(Map<String ,Object> params){
@@ -80,6 +89,11 @@ public class DataSpecialistFaultOrdersServiceImpl extends ServiceImpl<DataSpecia
         int rowsAffected= baseMapper.updateByparamsForApprover(params);
         Boolean isSuccess = rowsAffected > 0;
         return isSuccess;
+    }
+    public Integer updateOutTimeOrder(){
+        log.info("updateOutTimeOrder...:{}");
+        Integer rowsAffected= baseMapper.updateOutTimeOrder();
+        return rowsAffected;
     }
 
 

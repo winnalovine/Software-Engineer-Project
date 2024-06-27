@@ -19,4 +19,7 @@ public interface MobileSwitchFaultOrdersMapper extends BaseMapper<MobileSwitchFa
     Integer updateByparams(Map<String,Object>params);
 
     Integer updateByparamsForApprover(Map<String,Object>params);
+
+    //超时
+    Integer updateOutTimeOrder();
 }

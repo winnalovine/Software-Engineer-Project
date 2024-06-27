@@ -1,6 +1,7 @@
 package com.groupp.software.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.groupp.software.common.CityMapping;
 import com.groupp.software.common.R;
 import com.groupp.software.entity.Employee;
 import com.groupp.software.service.EmployeeService;
@@ -27,6 +28,10 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeServiceImpl employeeServiceImpl;
+
+    @Autowired
+    private CityMapping cityMapping;
+
 
     //todo 可能要修改映射位置
     @PostMapping("/login")
@@ -91,7 +96,7 @@ public class EmployeeController {
         log.info("新增员工，员工信息：{}",payload.toString());
 
         //新建一个employee用来存储注册信息，并更新到数据库
-        String eidStr = (String) payload.get("Eid");
+        String eidStr = (String) payload.get("employee_id");
         Employee employee=new Employee();
         //手动解析数据
         Long employeeId=null;
@@ -100,13 +105,21 @@ public class EmployeeController {
         } catch (NumberFormatException e) {
             System.out.println("Invalid Eid format: " + eidStr);
         }
-
-
-
         employee.setEmployeeId(employeeId);
-        employee.setDepartmentType((Integer) payload.get("Dtype"));
-        employee.setDepartmentLevel((String) payload.get("Dlevel"));
-        employee.setRoleType((Integer) payload.get("Etype"));
+        employee.setName((String) payload.get("name"));
+        employee.setPassword((String) payload.get("password"));
+        employee.setPhoneNumber(Long.valueOf(payload.get("phone").toString()));
+        Map<String,String> mapcity=cityMapping.getCityMap();
+        log.info("注册：城市映射。。{}",mapcity);
+
+        String Dlevel=(String) payload.get("department_level");
+        Dlevel=mapcity.get(Dlevel);
+        employee.setDepartmentLevel(Dlevel);
+        employee.setRoleType((Integer) payload.get("employee_type"));
+        employee.setDepartmentType((Integer) payload.get("department_type"));
+
+
+
         log.info("注册的信息：{}",employee.toString());
         //实现注册
         employeeService.save(employee);

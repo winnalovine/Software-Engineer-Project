@@ -3,6 +3,7 @@ package com.groupp.software.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.groupp.software.common.DateString;
 import com.groupp.software.entity.DataSpecialistFaultOrders;
 import com.groupp.software.entity.TransmissionSpecialistFaultOrders;
 import com.groupp.software.mapper.TransmissionSpecialistFaultOrdersMapper;
@@ -38,7 +39,15 @@ public class TransmissionSpecialistFaultOrdersServiceImpl extends ServiceImpl<Tr
         TransmissionSpecialistFaultOrders transmissionSpecialistFaultOrders =baseMapper.findByparams(params);
         log.info("TransmissionSpecialistFaultOrders:{}",transmissionSpecialistFaultOrders);
         Map<String,Object> result=new HashMap<>();
+        DateString dateString=new DateString();
+        dateString.setOrderId(transmissionSpecialistFaultOrders.getOrderId());
+        dateString.setSubmitDate(transmissionSpecialistFaultOrders.getSubmitDate());
+        dateString.setReviewDate(transmissionSpecialistFaultOrders.getReviewDate());
+        dateString.setCompletionDate(transmissionSpecialistFaultOrders.getCompletionDate());
+        dateString.setFaultOccurrenceDate(transmissionSpecialistFaultOrders.getFaultOccurrenceDate());
+        dateString.printAll();
         result.put("TransmissionSpecialistFaultOrders",transmissionSpecialistFaultOrders);
+        result.put("dates",dateString);
         return result;
     }
     public Boolean updateByparams(Map<String ,Object> params){
@@ -55,5 +64,10 @@ public class TransmissionSpecialistFaultOrdersServiceImpl extends ServiceImpl<Tr
         return isSuccess;
     }
 
+    public Integer updateOutTimeOrder(){
+        log.info("updateOutTimeOrder...:{}");
+        Integer rowsAffected= baseMapper.updateOutTimeOrder();
+        return rowsAffected;
+    }
 }
 
