@@ -36,7 +36,7 @@ public class CheckOutTimeOrdersJob implements Job {
        log.info("修改移动工单超时项。。。");
        Integer OutTimeOrderMobile =mobileSwitchFaultOrdersServiceImpl.updateOutTimeOrder();
         log.info("超时单数{}",OutTimeOrderMobile);
-        log.info("修改移动工单超时项。。。");
+        log.info("修改数据工单超时项。。。");
         Integer OutTimeOrderData =dataSpecialistFaultOrdersServiceImpl.updateOutTimeOrder();
         log.info("超时单数{}",OutTimeOrderData);
         log.info("修改移动工单超时项。。。");
