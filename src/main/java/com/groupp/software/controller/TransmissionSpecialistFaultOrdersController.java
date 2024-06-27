@@ -221,6 +221,7 @@ public class TransmissionSpecialistFaultOrdersController {
         for(int i=0;i<pagesize&&i<pageInfo.getSize();i++){
             log.info("第{}次转换时间格式",i);
             DateString dateString=new DateString();
+            dateString.setOrderId(transmissionSpecialistFaultOrders.get(i).getOrderId());
             dateString.setSubmitDate(transmissionSpecialistFaultOrders.get(i).getSubmitDate());
             dateString.setReviewDate(transmissionSpecialistFaultOrders.get(i).getReviewDate());
             dateString.setCompletionDate(transmissionSpecialistFaultOrders.get(i).getCompletionDate());

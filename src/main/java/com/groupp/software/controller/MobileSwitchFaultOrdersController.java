@@ -160,6 +160,7 @@ public class MobileSwitchFaultOrdersController {
         for(int i=0;i<pagesize&&i<pageInfo.getSize();i++){
             log.info("第{}次转换时间格式",i);
             DateString dateString=new DateString();
+            dateString.setOrderId(mobileSwitchFaultOrders.get(i).getOrderId());
             dateString.setSubmitDate(mobileSwitchFaultOrders.get(i).getSubmitDate());
             dateString.setReviewDate(mobileSwitchFaultOrders.get(i).getReviewDate());
             dateString.setCompletionDate(mobileSwitchFaultOrders.get(i).getCompletionDate());

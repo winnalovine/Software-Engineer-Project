@@ -10,12 +10,16 @@ import java.util.Date;
 
 @Component
 public class DateString implements Serializable {
+    private Long orderId;
     private String submitDate=null;
     private String reviewDate=null;
     private String completionDate=null;
     private String faultOccurrenceDate=null;
 
     DateFormat formate1 = new SimpleDateFormat("yyyy-MM-dd");
+    public  void setOrderId(Long id){
+        orderId=id;
+    }
     public void setSubmitDate(Date date){
         if(date!=null){
             submitDate = formate1.format(date);
@@ -41,6 +45,9 @@ public class DateString implements Serializable {
 
 
     }
+    public Long getOrderId(){
+        return orderId;
+    }
     public String getSubmitDate(){
         return submitDate;
     }
@@ -64,6 +71,7 @@ public class DateString implements Serializable {
     @Override
     public String toString() {
         return "DateString{" +
+                "orderId='" + orderId + '\'' +
                 "submitDate='" + submitDate + '\'' +
                 ", reviewDate='" + reviewDate + '\'' +
                 ", completionDate='" + completionDate + '\'' +

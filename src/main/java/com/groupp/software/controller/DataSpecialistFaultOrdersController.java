@@ -214,6 +214,7 @@ public class DataSpecialistFaultOrdersController {
         for(int i=0;i<pagesize&&i<pageInfo.getSize();i++){
             log.info("第{}次转换时间格式",i);
             DateString dateString=new DateString();
+            dateString.setOrderId(dataSpecialistFaultOrders.get(i).getOrderId());
             dateString.setSubmitDate(dataSpecialistFaultOrders.get(i).getSubmitDate());
             dateString.setReviewDate(dataSpecialistFaultOrders.get(i).getReviewDate());
             dateString.setCompletionDate(dataSpecialistFaultOrders.get(i).getCompletionDate());
