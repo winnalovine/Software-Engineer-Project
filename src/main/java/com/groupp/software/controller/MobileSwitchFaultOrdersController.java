@@ -2,6 +2,7 @@ package com.groupp.software.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.groupp.software.common.CityMapping;
+import com.groupp.software.common.DateString;
 import com.groupp.software.common.R;
 import com.groupp.software.entity.Employee;
 import com.groupp.software.entity.MobileSwitchFaultOrders;
@@ -156,18 +157,20 @@ public class MobileSwitchFaultOrdersController {
         List<MobileSwitchFaultOrders> mobileSwitchFaultOrders=(List<MobileSwitchFaultOrders>) result.get("list");
         log.info("转换时间类型前分页展示的数据。。：{}",mobileSwitchFaultOrders.get(0).getSubmitDate());
 
-        Map<String,String> dateStrings=new HashMap<>();
-        dateStrings.put("submitDate",null);
-        dateStrings.put("reviewDate",null);
-        dateStrings.put("completionDate",null);
-        dateStrings.put("faultOccurrenceDate",null);
+        List<DateString> dateStrings=new LinkedList<>();
 
-        DateFormat formate1 = new SimpleDateFormat("yyyy-MM-dd");
-        String dateString = formate1.format(mobileSwitchFaultOrders.get(0).getSubmitDate());
-        log.info("{}",dateString);
-        log.info("转换时间类型后分页展示的数据。。：{}",mobileSwitchFaultOrders);
-
-        result.put("DateList",dateString);
+        for(int i=0;i<pagesize;i++){
+            log.info("第{}次转换时间格式",i);
+            DateString dateString=new DateString();
+            dateString.setSubmitDate(mobileSwitchFaultOrders.get(i).getSubmitDate());
+            dateString.setReviewDate(mobileSwitchFaultOrders.get(i).getReviewDate());
+            dateString.setCompletionDate(mobileSwitchFaultOrders.get(i).getCompletionDate());
+            dateString.setFaultOccurrenceDate(mobileSwitchFaultOrders.get(i).getFaultOccurrenceDate());
+            dateString.printAll();
+            dateStrings.add(dateString);
+            log.info("修改后的datestrings：{}",dateStrings);
+        }
+        result.put("DateList",dateStrings);
         log.info("分页展示的数据。。：{}",result);
         return R.success(result);
     }
