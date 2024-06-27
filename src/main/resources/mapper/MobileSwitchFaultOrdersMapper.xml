@@ -6,46 +6,45 @@
 <!--    查询移动表单的工单编号和提交时间，可能要修改函数名称-->
     <select id="findMobileSwitchFaultOrders" resultType="com.groupp.software.entity.MobileSwitchFaultOrders">
         SELECT  * FROM mobile_switch_fault_orders
-        /*处理中*/
+
         <if test='pageshow=="0"' >
             where (creator_employee_id =#{employeeId})
             and (order_status=1 or order_status=3 or order_status=5 or order_status=6)
         </if>
-        /*草稿箱*/
+
         <if test='pageshow=="1"'>
             where (creator_employee_id =#{employeeId})
             and order_status=0
         </if>
-        /*审批失败*/
+
         <if test='pageshow=="2"'>
             and order_status=4
         </if>
-        /*已完成*/
+
         <if test='pageshow=="3"'>
             where (creator_employee_id =#{employeeId})
             and order_status=2
         </if>
-        /*审核中*/
+
         <if test='pageshow=="4"'>
             and order_status=3
         </if>
-        /*处理人*/
--- 待处理
+
         <if test='pageshow=="5"'>
             where (handler_employee_id =#{employeeId})
             and order_status=1
         </if>
---         加急处理
+
         <if test='pageshow=="6"'>
             where (handler_employee_id =#{employeeId})
             and order_status=6
         </if>
---         处理超时
+
         <if test='pageshow=="7"'>
             where (handler_employee_id =#{employeeId})
             and order_status=5
         </if>
---         处理完成
+
         <if test='pageshow=="8"'>
             where (handler_employee_id =#{employeeId})
             and order_status=2

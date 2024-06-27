@@ -288,7 +288,7 @@ public class TransmissionSpecialistFaultOrdersController {
         result.put("processingUnit",city);
         result.put("faultType",Integer.valueOf(payload.get("faultType").toString()));
         result.put("faultLevel",Integer.valueOf(payload.get("faultLevel").toString()));
-        result.put("faultSegment:",(String)payload.get("faultSegment"));
+        result.put("faultSegment",(String)payload.get("faultSegment"));
         result.put("faultDescription",(String)payload.get("faultDescription"));
 
         Boolean answer=transmissionSpecialistFaultOrdersServiceImpl.updateByparams(result);

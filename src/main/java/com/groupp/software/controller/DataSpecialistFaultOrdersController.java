@@ -282,10 +282,10 @@ public class DataSpecialistFaultOrdersController {
         result.put("processingUnit",city);
         result.put("faultType",Integer.valueOf(payload.get("faultType").toString()));
         result.put("faultLevel",Integer.valueOf(payload.get("faultLevel").toString()));
-        result.put("netWork",(String)payload.get("netWork"));
+        result.put("netWork",(String)payload.get("networkName"));
         result.put("deviceName",(String)payload.get("deviceName"));
         result.put("faultDescription",(String)payload.get("faultDescription"));
-
+        log.info("{}",result);
         Boolean answer=dataSpecialistFaultOrdersServiceImpl.updateByparams(result);
         return R.success(answer);
     }
