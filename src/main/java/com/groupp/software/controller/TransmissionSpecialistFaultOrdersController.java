@@ -205,7 +205,8 @@ public class TransmissionSpecialistFaultOrdersController {
         Long employeeId =(Long) session.getAttribute("employee");
         log.info("职工号employeeId:{}",employeeId );
         //todo 待解决的问题
-        employeeId=1001l;
+//        employeeId=1001l;
+        employeeId=Long.valueOf(payload.get("Eid").toString());
         int page=Integer.parseInt(Spage);
         int pagesize=Integer.parseInt(Spagesize);
 
