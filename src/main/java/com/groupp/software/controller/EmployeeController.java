@@ -143,6 +143,7 @@ public class EmployeeController {
     public R getDepartmentTypeOfProcessor(HttpServletRequest request, @RequestBody Map<String, Object> payload){
         //todo 解决跨域问题通过session获得员工号
         Long employeeId=1001l;
+        employeeId=Long.valueOf(payload.get("Eid").toString());
         Employee employee=employeeServiceImpl.findById(employeeId);
         log.info("employee:{}",employee);
         return R.success(employee);
